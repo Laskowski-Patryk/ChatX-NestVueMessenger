@@ -3,18 +3,20 @@
     <div id="btn-logo">
       <img id="logo-image" src="./assets/images/Logo2.png">
     </div>
-    <Chaty></Chaty>
+    <div id="main-conversations">
+        <MessageBlob></MessageBlob>
+
+    </div>
   </div>
 </template>
 
 <script>
 
-import Chaty from './components/Chaty'
-
+import MessageBlob from './components/MessageBlob'
 export default {
   name: 'App',
   components:{
-    Chaty
+    MessageBlob
   }
 };
 </script>
@@ -56,5 +58,15 @@ export default {
   margin-top:12%;
   margin-left:16%;
 }
-
+#main-conversations{
+    overflow: auto; 
+    margin-top: clamp(40px, 4vh, 100px);
+    margin-left: clamp(30px, 3vw, 100px);
+    width: clamp(300px, 30vw, 600px);
+    height:75vh;
+    border-radius: 50px;
+    background: #e0e0e0;
+    box-shadow: inset 10px 10px 20px #bababa,
+                inset -10px -10px 20px #ffffff;
+}
 </style>
