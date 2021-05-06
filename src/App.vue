@@ -37,8 +37,6 @@ export default {
               inset -10px -10px 21px #ffffff;
 }
 #btn-logo{
--webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-tap-highlight-color: transparent;
   cursor:pointer;
   background-color:#e0e0e0;
   margin-top: clamp(30px, 4vh, 100px);
@@ -50,7 +48,7 @@ export default {
   max-height:3%;
   border-radius:10px;
   box-shadow:  10px 10px 20px #bababa,
-              -10px -10px 20px #ffffff;
+             -10px -10px 20px #ffffff;
 }
 #logo-image{
   width:80%;
