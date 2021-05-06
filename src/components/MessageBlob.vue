@@ -4,7 +4,7 @@
             <img src="../assets/images/simple-avatar.png">
         </div>
         <div id = "conversation">
-            <div id ="name"> Aga Kowal</div>
+            <div id ="name"> </div>
         </div>
     </div>
 </template>
