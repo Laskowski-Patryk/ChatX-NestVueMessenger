@@ -33,7 +33,7 @@ export default {
   left: 1vw;
   right: 1vw;
   bottom: 0;
-  border-radius: 51px;
+  border-radius: 5vh;
   background: #e0e0e0;
   box-shadow: inset 10px 10px 21px #5a5a5a,
               inset -10px -10px 21px #ffffff;
@@ -48,7 +48,7 @@ export default {
   min-height:60px;
   max-width:3%;
   max-height:3%;
-  border-radius:10px;
+  border-radius:2vh;
   box-shadow:  10px 10px 20px #bababa,
              -10px -10px 20px #ffffff;
 }
@@ -62,7 +62,7 @@ export default {
     overflow: auto; 
     margin-top: clamp(40px, 4vh, 100px);
     margin-left: clamp(30px, 3vw, 100px);
-    width: clamp(300px, 30vw, 600px);
+    width: clamp(500px, 30vw, 1500px);
     height:75vh;
     border-radius: 50px;
     background: #e0e0e0;
