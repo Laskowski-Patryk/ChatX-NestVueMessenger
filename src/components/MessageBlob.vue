@@ -1,9 +1,9 @@
 <template>
     <div id = "blob">
-        <div id = "avatar">
+        <div class="clickable" id = "avatar">
             <img src="../assets/images/simple-avatar.png">
         </div>
-        <div id = "conversation">
+        <div class="clickable" id = "conversation">
             <div id ="name"> </div>
         </div>
     </div>
@@ -75,4 +75,5 @@ export default {
    user-select: nonea;          /* Non-prefixed version, currently 
                                   not supported by any browser */
 }
+
 </style>

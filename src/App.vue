@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div id="btn-logo">
-      <img id="logo-image" src="./assets/images/Logo2.png">
+    <div class= "clickable" id="btn-logo">
+      <img id="logo-image"  src="./assets/images/Logo2.png">
+    </div>
+    <div class= "clickable" id="btn-options">
     </div>
     <div id="main-conversations">
         <MessageBlob></MessageBlob>
@@ -39,6 +41,7 @@ export default {
               inset -10px -10px 21px #ffffff;
 }
 #btn-logo{
+  float:left;
   cursor:pointer;
   background-color:#e0e0e0;
   margin-top: clamp(30px, 4vh, 100px);
@@ -52,6 +55,21 @@ export default {
   box-shadow:  10px 10px 20px #bababa,
              -10px -10px 20px #ffffff;
 }
+#btn-options{
+  cursor:pointer;
+  background-color:#e0e0e0;
+  margin-top: clamp(30px, 4vh, 100px);
+  margin-right: clamp(30px, 3vw, 100px);
+  margin-bottom: 40px;
+  min-width:60px;
+  min-height:60px;
+  max-width:3%;
+  max-height:3%;
+  border-radius:2vh;
+  box-shadow:  10px 10px 20px #bababa,
+             -10px -10px 20px #ffffff;
+  float:right;
+}
 #logo-image{
   width:80%;
   height:80%;
@@ -60,12 +78,17 @@ export default {
 }
 #main-conversations{
     overflow: auto; 
-    margin-top: clamp(40px, 4vh, 100px);
+    clear:both;
     margin-left: clamp(30px, 3vw, 100px);
     width: clamp(500px, 30vw, 1500px);
     height:75vh;
     border-radius: 50px;
     background: #e0e0e0;
+    box-shadow: inset 10px 10px 20px #bababa,
+                inset -10px -10px 20px #ffffff;
+    
+}
+.clickable:hover{
     box-shadow: inset 10px 10px 20px #bababa,
                 inset -10px -10px 20px #ffffff;
 }
