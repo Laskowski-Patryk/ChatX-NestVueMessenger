@@ -9,7 +9,7 @@ const routes = [
     path: '/',
     name: 'MainPage',
     component: MainPage,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to:any, from:any, next:any) => {
       guard(to, from, next);
     }
   },
@@ -26,7 +26,7 @@ const routes = [
 
 ]
 
-const guard = function(to, from, next) {
+const guard = function(to:any, from:any, next:any) {
   axios.get('/api/checkAuthToken').then(response => {
       next();
   }).catch(error => {
