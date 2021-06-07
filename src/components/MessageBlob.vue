@@ -1,10 +1,10 @@
 <template>
-    <div id = "blob">
-        <div class="clickable" id = "avatar">
+    <div class = "blob">
+        <div class="avatar">
             <img src="../assets/images/simple-avatar.png">
         </div>
-        <div class="clickable" id = "conversation">
-            <div id ="name"> </div>
+        <div class="conversation">
+            <div class ="name"> </div>
         </div>
     </div>
 </template>
@@ -21,11 +21,10 @@ export default {
 
 
 <style>
-#name{
-    
+.name{
     margin-top: 10px;
 }
-#avatar{
+.avatar{
     width:80px;
     height:80px;
     margin-left: 4%;
@@ -34,12 +33,14 @@ export default {
     box-shadow:  10px 10px 20px #bababa,
              -10px -10px 20px #ffffff;
     float:left;
-
+}
+.conversation:hover{
+    box-shadow: inset 10px 10px 20px #bababa,
+                inset -10px -10px 20px #ffffff;
+    cursor: pointer;
 }
 
-
-#conversation{
-
+.conversation{
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     color: black;
@@ -52,7 +53,7 @@ export default {
     box-shadow: 10px 10px 20px #bababa,
                -10px -10px 20px #ffffff;
 }
-#avatar>img{
+.avatar>img{
     width:70%;
     height:70%;
 
@@ -66,13 +67,13 @@ export default {
     -o-user-drag: none;
    -webkit-user-drag: none;
 }
-#blob{
+.blob{
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none;   /* Chrome/Safari/Opera */
   -khtml-user-select: none;    /* Konqueror */
   -moz-user-select: none;      /* Firefox */
   -ms-user-select: none;       /* Internet Explorer/Edge*/
-   user-select: nonea;          /* Non-prefixed version, currently 
+   user-select: none;          /* Non-prefixed version, currently 
                                   not supported by any browser */
 }
 
