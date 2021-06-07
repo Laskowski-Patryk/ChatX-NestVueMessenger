@@ -18,7 +18,6 @@ export class UsersService {
 
   public async postUser(newUser: UserDto) {
     const user = await new this.userModel(newUser);
-    console.log('elo');
     return user.save();
   }
 
