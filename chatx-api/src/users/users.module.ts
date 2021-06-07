@@ -3,13 +3,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { UserSchema } from '../schemas/user.schema';
+
 @Module({
-  imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://lasek:lasek123@cluster0.8f7wo.mongodb.net/test',
-    ), 
-  ],
+  imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
   controllers: [UsersController],
   providers: [UsersService],
 })
-export class AppModule {}
+export class UsersModule {}
