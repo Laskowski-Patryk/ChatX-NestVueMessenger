@@ -47,7 +47,7 @@ export class UsersService {
         return from(user.save()).pipe(
           map((user: IUser) => {
             const { password, ...result } = user;
-            return result;
+            return {msg: "good"};
           }),
           catchError((err) => throwError(err)),
         );
