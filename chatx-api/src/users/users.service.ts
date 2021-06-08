@@ -3,75 +3,82 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IUser } from '../interfaces/user.interface';
 import { UserDto } from '../dtos/user.dto';
-import { Observable, from, throwError } from 'rxjs';
-import { switchMap, map, catchError} from 'rxjs/operators';
-import { AuthService } from '../auth/auth.service';
+import { from, Observable, throwError } from 'rxjs';
+import { switchMap, map, catchError } from 'rxjs/operators';
+const bcrypt = require('bcrypt');
 
 @Injectable()
 export class UsersService {
   private users: IUser[] = [];
   constructor(
-    @InjectModel('User') private readonly userModel: Model<IUser>,
-    private authService: AuthService
-    
-    ) {}
+    @InjectModel('User') private readonly userModel: Model<IUser>
+  ) {}
 
-  public async getUsers(): Promise<UserDto[]> {
-    const users = await this.userModel.find().exec();
-    if (!users || !users[0]) {
-      throw new HttpException('Not Found', 404);
-    }
-    return [...users];
+  public hashPassword(password: string): Observable<string> {
+    return from<string>(bcrypt.hash(password, 12));
+  }
+
+  public getUsers(): Observable<UserDto[]> {
+    return from(this.userModel.find()).pipe(
+      map((users: UserDto[]) => {
+        users.forEach(function (v) {
+          v.password = undefined;
+          v.private_key = undefined;
+        });
+        return users;
+      }),
+    );
   }
 
   public async postUser(newUser: UserDto) {
-
-    return this.authService.hashPassword(newUser.password).pipe(
+    return this.hashPassword(newUser.password).pipe(
       switchMap((passwordHash: string) => {
-          const usr = new UserDto();
-          usr.name = newUser.name;
-          usr.login = newUser.login;
-          usr.email = newUser.email;
-          usr.city = newUser.city;
-          usr.avatar = newUser.avatar;
-          usr.private_key = randomHash(20, 0);
-          usr.public_key = randomHash(20, 0);
-          usr.surname = newUser.surname;
-          usr.password = passwordHash;
+        const usr = new UserDto();
+        usr.name = newUser.name;
+        usr.login = newUser.login;
+        usr.email = newUser.email;
+        usr.city = newUser.city;
+        usr.avatar = newUser.avatar;
+        usr.private_key = randomHash(20, 0);
+        usr.public_key = randomHash(20, 0);
+        usr.surname = newUser.surname;
+        usr.password = passwordHash;
 
-          const user = new this.userModel(usr);
+        const user = new this.userModel(usr);
 
-          return from(user.save()).pipe(
-              map((user: IUser) => {
-                  const {password, ...result} = user;
-                  return result;
-              }),
-              catchError(err => throwError(err))
-          )
-      })
-  )
-
-
-    // newUser.email_verified = false;
-    // newUser.private_key = randomHash(20, 0);
-    // newUser.public_key = randomHash(20, 0);
-
-    // console.log(this.authService.hashPassword(newUser.password));
-
-    // const user = await new this.userModel(newUser);
-    // return user.save();
-
-
+        return from(user.save()).pipe(
+          map((user: IUser) => {
+            const { password, ...result } = user;
+            return result;
+          }),
+          catchError((err) => throwError(err)),
+        );
+      }),
+    );
   }
 
-  public async getUserById(id: number): Promise<UserDto> {
+  public async login(newUser: UserDto): Promise<UserDto> {
+    const user = newUser;
+    if (!user) {
+      throw new HttpException('Not Found', 404);
+    }
+    return { ...user };
+  }
 
+  public async getUserByLogin(login: string): Promise<UserDto | undefined> {
+    const user = await this.userModel.findOne({ login }).exec();
+    if (!user || !user[0]) {
+      throw new HttpException('Not Found', 404);
+    }
+    return { ...user };
+  }
+
+  public async getUserById(id: number): Promise<any> {
     const user = await this.userModel.findOne({ id }).exec();
     if (!user || !user[0]) {
       throw new HttpException('Not Found', 404);
     }
     return { ...user };
-    
   }
 
   public async deleteUserById(id: number): Promise<any> {
@@ -95,6 +102,9 @@ export class UsersService {
     }
     return { ...user };
   }
+
+
+
 }
 
 function randomHash(length, current) {

@@ -15,4 +15,5 @@ export class UsersController {
   public postUser(@Body() user: UserDto) {
     return this.userService.postUser(user);
   }
+
 }
