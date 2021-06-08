@@ -10,6 +10,7 @@ const bcrypt = require('bcrypt');
 @Injectable()
 export class UsersService {
   private users: IUser[] = [];
+  errorMsg: string;
   constructor(@InjectModel('User') private readonly userModel: Model<IUser>) {}
 
   public hashPassword(password: string): Observable<string> {
@@ -47,15 +48,16 @@ export class UsersService {
         return from(user.save()).pipe(
           map((user: IUser) => {
             const { password, ...result } = user;
-            return {msg: "good"};
+            return { msg: 'good' };
           }),
-          catchError((err) => throwError(err)),
+
+          catchError((e) => throwError(e)),
         );
       }),
     );
   }
 
-  public async getUserByusername(username: string): Promise<any> {
+  public async getUserByUsername(username: string): Promise<any> {
     const user = await this.userModel.findOne({ username }).exec();
     if (!user) {
       throw new HttpException('Not Found', 404);
@@ -63,15 +65,24 @@ export class UsersService {
     return user;
   }
 
-  public async getUserById(id: number): Promise<any> {
+  public async getUserById(id: string): Promise<any> {
     const user = await this.userModel.findOne({ id }).exec();
-    if (!user || !user[0]) {
+    if (!user) {
       throw new HttpException('Not Found', 404);
     }
     return { ...user };
   }
 
-  public async deleteUserById(id: number): Promise<any> {
+  public async getUserByEmail(email: string): Promise<any> {
+    const user = await this.userModel.findOne({ email }).exec();
+    console.log(user);
+    if (!user) {
+      throw new HttpException('Not Found', 404);
+    }
+    return { ...user };
+  }
+
+  public async deleteUserById(id: string): Promise<any> {
     const user = await this.userModel.deleteOne({ id }).exec();
     if (user.deletedCount === 0) {
       throw new HttpException('Not Found', 404);
@@ -80,7 +91,7 @@ export class UsersService {
   }
 
   public async updateUserById(
-    id: number,
+    id: string,
     propertyName: string,
     propertyValue: string,
   ): Promise<UserDto> {
