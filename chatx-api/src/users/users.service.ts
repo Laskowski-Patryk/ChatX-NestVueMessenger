@@ -10,9 +10,7 @@ const bcrypt = require('bcrypt');
 @Injectable()
 export class UsersService {
   private users: IUser[] = [];
-  constructor(
-    @InjectModel('User') private readonly userModel: Model<IUser>
-  ) {}
+  constructor(@InjectModel('User') private readonly userModel: Model<IUser>) {}
 
   public hashPassword(password: string): Observable<string> {
     return from<string>(bcrypt.hash(password, 12));
@@ -35,7 +33,7 @@ export class UsersService {
       switchMap((passwordHash: string) => {
         const usr = new UserDto();
         usr.name = newUser.name;
-        usr.login = newUser.login;
+        usr.username = newUser.username;
         usr.email = newUser.email;
         usr.city = newUser.city;
         usr.avatar = newUser.avatar;
@@ -57,11 +55,9 @@ export class UsersService {
     );
   }
 
-  public async getUserByLogin(login: string): Promise<any> {
-    
-    const user = await this.userModel.findOne({ login }).exec();
+  public async getUserByusername(username: string): Promise<any> {
+    const user = await this.userModel.findOne({ username }).exec();
     if (!user) {
-
       throw new HttpException('Not Found', 404);
     }
     return user;
@@ -96,9 +92,6 @@ export class UsersService {
     }
     return { ...user };
   }
-
-
-
 }
 
 function randomHash(length, current) {

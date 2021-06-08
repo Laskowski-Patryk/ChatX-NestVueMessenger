@@ -1,6 +1,6 @@
 export class UserDto {
      _id?: string;
-     login: string;
+     username: string;
      password: string;
      password_hash?: string;
      email: string;

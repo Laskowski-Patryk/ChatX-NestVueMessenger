@@ -20,8 +20,8 @@ export class AuthService {
 
   }
 
-  async validateUser(login: string, password: string): Promise<UserDto | null> {
-    const user = await this.usersService.getUserByLogin(login);
+  async validateUser(username: string, password: string): Promise<UserDto | null> {
+    const user = await this.usersService.getUserByusername(username);
     if (user && await this.comparePasswords(password, user.password)) {
       const {password,private_key, ...all } = user._doc;
 

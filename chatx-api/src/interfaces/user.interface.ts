@@ -2,7 +2,7 @@ import { Document } from 'mongoose';
 
 export interface IUser extends Document {
   readonly _id?: string;
-  readonly login: string;
+  readonly username: string;
   readonly password: string;
   readonly password_hash?: string;
   readonly email: string;
