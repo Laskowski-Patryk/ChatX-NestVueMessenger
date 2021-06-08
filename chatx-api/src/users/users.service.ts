@@ -1,16 +1,20 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { createCipheriv, randomBytes } from 'crypto';
-import { promisify } from 'util';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IUser } from '../interfaces/user.interface';
 import { UserDto } from '../dtos/user.dto';
-const bcrypt = require('bcrypt');
+import { Observable, from, throwError } from 'rxjs';
+import { switchMap, map, catchError} from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UsersService {
   private users: IUser[] = [];
-  constructor(@InjectModel('User') private readonly userModel: Model<IUser>) {}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<IUser>,
+    private authService: AuthService
+    
+    ) {}
 
   public async getUsers(): Promise<UserDto[]> {
     const users = await this.userModel.find().exec();
@@ -21,22 +25,53 @@ export class UsersService {
   }
 
   public async postUser(newUser: UserDto) {
-    newUser.email_verified = false;
-    newUser.private_key = randomHash(20, 0);
-    newUser.public_key = randomHash(20, 0);
 
-    // TODO HASHING PASSWORDS
+    return this.authService.hashPassword(newUser.password).pipe(
+      switchMap((passwordHash: string) => {
+          const usr = new UserDto();
+          usr.name = newUser.name;
+          usr.login = newUser.login;
+          usr.email = newUser.email;
+          usr.city = newUser.city;
+          usr.avatar = newUser.avatar;
+          usr.private_key = randomHash(20, 0);
+          usr.public_key = randomHash(20, 0);
+          usr.surname = newUser.surname;
+          usr.password = passwordHash;
 
-    const user = await new this.userModel(newUser);
-    return user.save();
+          const user = new this.userModel(usr);
+
+          return from(user.save()).pipe(
+              map((user: IUser) => {
+                  const {password, ...result} = user;
+                  return result;
+              }),
+              catchError(err => throwError(err))
+          )
+      })
+  )
+
+
+    // newUser.email_verified = false;
+    // newUser.private_key = randomHash(20, 0);
+    // newUser.public_key = randomHash(20, 0);
+
+    // console.log(this.authService.hashPassword(newUser.password));
+
+    // const user = await new this.userModel(newUser);
+    // return user.save();
+
+
   }
 
   public async getUserById(id: number): Promise<UserDto> {
+
     const user = await this.userModel.findOne({ id }).exec();
     if (!user || !user[0]) {
       throw new HttpException('Not Found', 404);
     }
     return { ...user };
+    
   }
 
   public async deleteUserById(id: number): Promise<any> {
