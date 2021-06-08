@@ -10,12 +10,8 @@ const bcrypt = require('bcrypt');
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private usersService: UsersService,
+    private usersService: UsersService
   ) {}
-
-  generateJWT(user: IUser): Observable<string> {
-    return from(this.jwtService.signAsync({ user })); // https://www.youtube.com/watch?v=bbDDSylRM04
-  }
 
   async comparePasswords(newPassword: string, passwordHash: string): Promise<any> {
     const match = await bcrypt.compare(newPassword, passwordHash);
@@ -32,5 +28,12 @@ export class AuthService {
       return all;
     }
     return null;
+  }
+
+  async login(user: UserDto){
+    const payload = {name: user.name, sub: user._id}
+    return{
+      access_token: this.jwtService.sign(payload),
+    }
   }
 }
