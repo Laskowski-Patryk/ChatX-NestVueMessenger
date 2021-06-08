@@ -57,20 +57,14 @@ export class UsersService {
     );
   }
 
-  public async login(newUser: UserDto): Promise<UserDto> {
-    const user = newUser;
-    if (!user) {
-      throw new HttpException('Not Found', 404);
-    }
-    return { ...user };
-  }
-
-  public async getUserByLogin(login: string): Promise<UserDto | undefined> {
+  public async getUserByLogin(login: string): Promise<any> {
+    
     const user = await this.userModel.findOne({ login }).exec();
-    if (!user || !user[0]) {
+    if (!user) {
+
       throw new HttpException('Not Found', 404);
     }
-    return { ...user };
+    return user;
   }
 
   public async getUserById(id: number): Promise<any> {

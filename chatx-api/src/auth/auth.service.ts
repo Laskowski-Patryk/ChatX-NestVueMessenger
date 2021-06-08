@@ -17,18 +17,18 @@ export class AuthService {
     return from(this.jwtService.signAsync({ user })); // https://www.youtube.com/watch?v=bbDDSylRM04
   }
 
-  comparePasswords(
-    newPassword: string,
-    passwordHash: string,
-  ): Observable<any | boolean> {
-    return of<any | boolean>(bcrypt.compare(newPassword, passwordHash));
+  async comparePasswords(newPassword: string, passwordHash: string): Promise<any> {
+    const match = await bcrypt.compare(newPassword, passwordHash);
+    
+    return match;
+
   }
 
   async validateUser(login: string, password: string): Promise<UserDto | null> {
     const user = await this.usersService.getUserByLogin(login);
+    if (user && await this.comparePasswords(password, user.password)) {
+      const {password,private_key, ...all } = user._doc;
 
-    if (user && this.comparePasswords(password, user.password)) {
-      const {...all} = user;
       return all;
     }
     return null;
