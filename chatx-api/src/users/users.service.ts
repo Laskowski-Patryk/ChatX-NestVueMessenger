@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IUser } from '../interfaces/user.interface';
 import { UserDto } from '../dtos/user.dto';
-import { from, Observable, throwError } from 'rxjs';
+import { from, Observable, of, throwError } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 const bcrypt = require('bcrypt');
 
@@ -45,7 +45,11 @@ export class UsersService {
 
         const user = new this.userModel(usr);
 
-        return from(user.save()).pipe(
+        return from(
+          user.save().catch((err) => {
+            throw new HttpException(err.errors, 409);
+          }),
+        ).pipe(
           map((user: IUser) => {
             const { password, ...result } = user;
             return { msg: 'good' };
