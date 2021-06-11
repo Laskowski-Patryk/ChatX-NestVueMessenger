@@ -1,10 +1,12 @@
 <template>
   <div class="blob">
-    <div class="avatar">
+    
+    <div class="conversation">
+      <div class="avatar">
       <img src="../assets/images/simple-avatar.png" />
     </div>
-    <div class="conversation">
-      <div class="name"></div>
+      <div class="name">{{user}}</div>
+      <div class="lastMessage">{{message}}</div>
     </div>
   </div>
 </template>
@@ -12,7 +14,11 @@
 
 
 <script>
-export default {};
+export default {
+props: ['user','message'],
+
+};
+
 </script>
 
 
@@ -21,15 +27,25 @@ export default {};
 <style>
 .name {
   margin-top: 10px;
+  grid-column: 2/6;
+  grid-row: 1;
+  font-size:1.1rem;
+}
+.lastMessage{
+  grid-column: 2/6;
+  grid-row: 2;
+  opacity: .7;
+  margin-top:-.5rem;
 }
 .avatar {
   width: 80px;
   height: 80px;
-  margin-left: 4%;
+  margin-left: -1.6rem;
   border-radius: 50%;
   background: #e0e0e0;
   box-shadow: 10px 10px 20px #bababa, -10px -10px 20px #ffffff;
-  float: left;
+  grid-column: 1;
+  grid-row: 1;
 }
 .conversation:hover {
   box-shadow: inset 10px 10px 20px #bababa, inset -10px -10px 20px #ffffff;
@@ -47,6 +63,9 @@ export default {};
   border-radius: 10px;
   background: #e0e0e0;
   box-shadow: 10px 10px 20px #bababa, -10px -10px 20px #ffffff;
+  display: grid;
+  grid-template-columns: repeat(2, 80px);
+  grid-auto-rows: minmax(2rem, auto);
 }
 .avatar > img {
   width: 70%;

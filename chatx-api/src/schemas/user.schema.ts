@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { IUser } from '../interfaces/user.interface';
+import { UserDto } from '../dtos/user.dto';
 var uniqueValidator = require('mongoose-unique-validator');
 mongoose.set('useCreateIndex', true);
 
@@ -20,5 +20,5 @@ export const UserSchema = new mongoose.Schema(
   { versionKey: false },
 );
 UserSchema.plugin(uniqueValidator);
-export const User = mongoose.model<IUser>('User', UserSchema);
+export const User = mongoose.model<UserDto>('User', UserSchema);
 export default User;

@@ -1,7 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IUser } from '../interfaces/user.interface';
 import { UserDto } from '../dtos/user.dto';
 import { from, Observable, of, throwError } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
@@ -9,9 +8,8 @@ const bcrypt = require('bcrypt');
 
 @Injectable()
 export class UsersService {
-  private users: IUser[] = [];
   errorMsg: string;
-  constructor(@InjectModel('User') private readonly userModel: Model<IUser>) {}
+  constructor(@InjectModel('User') private readonly userModel: Model<UserDto>) {}
 
   public hashPassword(password: string): Observable<string> {
     return from<string>(bcrypt.hash(password, 12));
@@ -50,7 +48,7 @@ export class UsersService {
             throw new HttpException(err.errors, 409);
           }),
         ).pipe(
-          map((user: IUser) => {
+          map((user: UserDto) => {
             const { password, ...result } = user;
             return { msg: 'good' };
           }),

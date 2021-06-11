@@ -68,7 +68,7 @@ export default {
   width: clamp(10%, 35%, 30%);
   height: 86%;
   border-radius: 2vh;
-  box-shadow: 10px 10px 20px #bababa, -10px -10px 20px #ffffff;
+  box-shadow: 0.625rem 0.625rem 1.25rem #bababa, -0.625rem -0.625rem 1.25rem #ffffff;
   box-sizing: border-box;
   padding: clamp(2rem, 3%, 35%);
   overflow: auto;
@@ -78,7 +78,7 @@ export default {
 button{
   margin: 25px 0 0 0;
   width: 100%;
-  height: 50px;
+  height: 3.125rem;
   color: #000;
   font-size: 18px;
   font-weight: 600;
@@ -89,13 +89,13 @@ button{
   border-radius: 25px;
   opacity: 0.8;
   box-shadow: 2px 2px 5px #bababa,
-              -5px -5px 10px #ffffff;
+              -5px -5px 0.625rem #ffffff;
 }
 
 button:focus{
   color: #3498db;
   box-shadow: inset 2px 2px 5px #bababa,
-              inset -5px -5px 10px #ffffff;
+              inset -5px -5px 0.625rem #ffffff;
 }
 .form-control{
   height:3rem !important;
@@ -109,7 +109,7 @@ button:focus{
   background: #dde1e7;
   border-radius: 25px;
   box-shadow: inset 2px 2px 5px #babecc,
-              inset -5px -5px 10px #ffffff;
+              inset -5px -5px 0.625rem #ffffff;
 }
 .form-control input:focus ~ label{
   box-shadow: inset 2px 2px 5px #babecc,
