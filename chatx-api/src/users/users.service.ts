@@ -9,7 +9,9 @@ const bcrypt = require('bcrypt');
 @Injectable()
 export class UsersService {
   errorMsg: string;
-  constructor(@InjectModel('User') private readonly userModel: Model<UserDto>) {}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<UserDto>,
+  ) {}
 
   public hashPassword(password: string): Observable<string> {
     return from<string>(bcrypt.hash(password, 12));
@@ -67,7 +69,7 @@ export class UsersService {
     return user;
   }
 
-  public async getUserById(id: string): Promise<any> {
+  public async getUserById(id: string): Promise<UserDto> {
     const user = await this.userModel.findOne({ id }).exec();
     if (!user) {
       throw new HttpException('Not Found', 404);
@@ -75,7 +77,7 @@ export class UsersService {
     return { ...user };
   }
 
-  public async getUserByEmail(email: string): Promise<any> {
+  public async getUserByEmail(email: string): Promise<UserDto> {
     const user = await this.userModel.findOne({ email }).exec();
     console.log(user);
     if (!user) {

@@ -1,12 +1,24 @@
 import * as mongoose from 'mongoose';
 import { UserDto } from '../dtos/user.dto';
+const moment = require('moment-timezone');
 var uniqueValidator = require('mongoose-unique-validator');
-mongoose.set('useCreateIndex', true);
 
 export const UserSchema = new mongoose.Schema(
   {
-    email: { type: String, required: true,unique: true, dropDups: true},
-    username: { type: String, required: true,unique: true, dropDups: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      dropDups: true,
+      lowercase: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      dropDups: true,
+      lowercase: true,
+    },
     password: { type: String, required: true },
     password_hash: String,
     email_verified: Boolean,
@@ -16,8 +28,9 @@ export const UserSchema = new mongoose.Schema(
     avatar: String,
     public_key: { type: String, dropDups: true, unique: true },
     private_key: { type: String, dropDups: true, unique: true },
+    created_at: {type: Date, default: Date.now()+(2*60*60*1000)},
   },
-  { versionKey: false },
+  { versionKey: false }, // aby nie zwracał niepotrzebnych danych
 );
 UserSchema.plugin(uniqueValidator);
 export const User = mongoose.model<UserDto>('User', UserSchema);
