@@ -1,7 +1,6 @@
 import * as mongoose from 'mongoose';
 import { UserDto } from '../dtos/user.dto';
-const moment = require('moment-timezone');
-var uniqueValidator = require('mongoose-unique-validator');
+// var uniqueValidator = require('mongoose-unique-validator');
 
 export const UserSchema = new mongoose.Schema(
   {
@@ -32,6 +31,7 @@ export const UserSchema = new mongoose.Schema(
   },
   { versionKey: false }, // aby nie zwracał niepotrzebnych danych
 );
-UserSchema.plugin(uniqueValidator);
+
+
 export const User = mongoose.model<UserDto>('User', UserSchema);
 export default User;

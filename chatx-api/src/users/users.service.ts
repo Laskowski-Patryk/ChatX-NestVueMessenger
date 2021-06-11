@@ -2,13 +2,12 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDto } from '../dtos/user.dto';
-import { from, Observable, of, throwError } from 'rxjs';
+import { from, Observable, throwError } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 const bcrypt = require('bcrypt');
 
 @Injectable()
 export class UsersService {
-  errorMsg: string;
   constructor(
     @InjectModel('User') private readonly userModel: Model<UserDto>,
   ) {}
@@ -30,29 +29,39 @@ export class UsersService {
   }
 
   public async postUser(newUser: UserDto) {
+    let errors = {
+      statusCode: 400,
+      message: [],
+      error: 'Bad Request',
+    };
     return this.hashPassword(newUser.password).pipe(
       switchMap((passwordHash: string) => {
         const usr = new UserDto();
-        usr.name = newUser.name;
+        usr.name = capitalizeFirstLetter(newUser.name);
         usr.username = newUser.username;
         usr.email = newUser.email;
         usr.city = newUser.city;
         usr.avatar = newUser.avatar;
         usr.private_key = randomHash(20, 0);
         usr.public_key = randomHash(20, 0);
-        usr.surname = newUser.surname;
+        usr.surname = capitalizeFirstLetter(newUser.surname);
         usr.password = passwordHash;
 
         const user = new this.userModel(usr);
 
         return from(
           user.save().catch((err) => {
-            throw new HttpException(err.errors, 409);
+            if (err.name === 'MongoError' && err.keyValue.username)
+              errors.message[errors.message.length] = 'Login have to be unique';
+
+            if (err.name === 'MongoError' && err.keyValue.email)
+              errors.message[errors.message.length] = 'Email have to be unique';
+            throw new HttpException(errors, 400);
           }),
         ).pipe(
           map((user: UserDto) => {
             const { password, ...result } = user;
-            return { msg: 'good' };
+            return { msg: 'Successfully Registered' };
           }),
 
           catchError((e) => throwError(e)),
@@ -107,6 +116,10 @@ export class UsersService {
     }
     return { ...user };
   }
+}
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function randomHash(length, current) {

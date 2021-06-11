@@ -5,13 +5,17 @@ import { UsersService } from './users.service';
 
 @Controller()
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    
+  ) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
+  @Get('getProfile')
   public getUsers() {
     return this.userService.getUsers();
-  }
+  } 
+
 
   @Post('register')
   public postUser(@Body() user: UserDto) {

@@ -4,4 +4,5 @@ export class MessageDto {
      id_conversation: string;
      message: string;
      send_date: Date;
+     seen?: boolean;
 }
