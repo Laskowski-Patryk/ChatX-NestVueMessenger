@@ -13,6 +13,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('getProfile')
   public getUsers() {
+    console.log("siema");
     return this.userService.getUsers();
   } 
 

@@ -27,9 +27,10 @@ const routes = [
 ]
 
 const guard = function(to:any, from:any, next:any) {
-  axios.get('/api/checkAuthToken').then(response => {
+  axios.get('/getProfile').then(response => {
       next();
   }).catch(error => {
+    
       window.location.href = "/signin";
   })
 };

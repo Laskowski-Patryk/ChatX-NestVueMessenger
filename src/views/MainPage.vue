@@ -8,10 +8,13 @@
       <div class="main-conversations">
         <MessageBlob user="Jan Kowalski" message="Pozdrawiam"></MessageBlob>
         <MessageBlob user="Jan Stołyga" message="Witam pana"></MessageBlob>
-        <MessageBlob user="Aga Kowal" message="Miłego dzionka, smacznej kawusi"></MessageBlob>
+        <MessageBlob
+          user="Aga Kowal"
+          message="Miłego dzionka, smacznej kawusi"
+        ></MessageBlob>
       </div>
       <div class="chat-module">
-        <ChatModule></ChatModule> 
+        <ChatModule></ChatModule>
       </div>
     </div>
   </div>
@@ -40,7 +43,8 @@ export default {
   bottom: 0;
   border-radius: 5vh;
   background: #e0e0e0;
-  box-shadow: inset 0.625rem 0.625rem 21px #5a5a5a, inset -0.625rem -0.625rem 21px #ffffff;
+  box-shadow: inset 0.625rem 0.625rem 21px #5a5a5a,
+    inset -0.625rem -0.625rem 21px #ffffff;
 }
 .btn-logo {
   float: left;
@@ -54,7 +58,8 @@ export default {
   max-width: 3%;
   max-height: 3%;
   border-radius: 2vh;
-  box-shadow: 0.625rem 0.625rem 1.25rem #bababa, -0.625rem -0.625rem 1.25rem #ffffff;
+  box-shadow: 0.625rem 0.625rem 1.25rem #bababa,
+    -0.625rem -0.625rem 1.25rem #ffffff;
 }
 .btn-options {
   cursor: pointer;
@@ -96,7 +101,8 @@ export default {
   height: 75vh;
   border-radius: 3.125rem;
   background: #e0e0e0;
-  box-shadow: inset 0.625rem 0.625rem 1.25rem #bababa, inset -0.625rem -0.625rem 1.25rem #ffffff;
+  box-shadow: inset 0.625rem 0.625rem 1.25rem #bababa,
+    inset -0.625rem -0.625rem 1.25rem #ffffff;
   overflow: auto;
 }
 .btn-options:active,
