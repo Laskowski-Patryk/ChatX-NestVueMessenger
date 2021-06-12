@@ -15,7 +15,7 @@ export class MessageController {
 
   @Get('loadAll')
   public loadAll(@Request() req): Promise<MessageDto[]> {
-    return this.messageService.loadAll(req.user, 4, 4); // (req.user, ile zaladowac, ile już załadowanych)
+    return this.messageService.loadAll(req.user,7, 4, 0); // (req.user, ile zaladowac, ile już załadowanych)
   }
 
   @Post('send')

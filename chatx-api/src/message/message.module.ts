@@ -5,15 +5,16 @@ import { MessageController } from './message.controller';
 import { MessageService } from './message.service';
 import { MessageSchema } from '../schemas/message.schema';
 import { ConversationModule } from '../conversation/conversation.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Message', schema: MessageSchema }]),
-    ConversationModule
+    ConversationModule,
+    UsersModule,
   ],
   controllers: [MessageController],
   providers: [MessageService],
   exports: [MessageService],
 })
 export class MessageModule {}
- 

@@ -62,7 +62,8 @@ export class UsersService {
         ).pipe(
           map((user: UserDto) => {
             const { password, ...result } = user;
-            return { msg: 'Successfully Registered' };
+            
+            return { msg: 'Successfully registered. Check your email to verify.' };
           }),
 
           catchError((e) => throwError(e)),
@@ -80,7 +81,7 @@ export class UsersService {
   }
 
   public async getUserById(id: string): Promise<UserDto> {
-    const user = await this.userModel.findOne({ id }).exec();
+    const user = await this.userModel.findOne({ _id: id }).exec();
     if (!user) {
       throw new HttpException('Not Found', 404);
     }
