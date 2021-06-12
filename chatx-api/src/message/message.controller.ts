@@ -8,18 +8,22 @@ import { MessageService } from './message.service';
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  @Get('loadMessages')
-  public loadMessages(@Request() req) {
-    return this.messageService.loadMessages(req.user, req.body.user2, 4); // (req.user, ile zaladowac)
+  @Get('scrollLoad')
+  public scrollLoad(@Request() req): Promise<MessageDto[]> {
+    return this.messageService.scrollLoad(req.body.conversation, 4, 0); // (req.user, ile zaladowac, ile już załadowanych)
   }
 
-  @Get('loadMore')
-  public loadMore(@Request() req) {
-    return this.messageService.loadMore(req.user, 4, 4); // (req.user, ile zaladowac, ile już załadowanych)
+  @Get('loadAll')
+  public loadAll(@Request() req): Promise<MessageDto[]> {
+    return this.messageService.loadAll(req.user, 4, 4); // (req.user, ile zaladowac, ile już załadowanych)
   }
 
-  // @Post('send')
-  // public sendMessage(@Body() messageService: MessageDto) {
-  //   //   return this.userService.postUser(user);
-  // }
+  @Post('send')
+  public send(@Request() req) {
+    return this.messageService.send(
+      req.body.msg,
+      req.user,
+      req.body.user2
+    );
+  }
 }

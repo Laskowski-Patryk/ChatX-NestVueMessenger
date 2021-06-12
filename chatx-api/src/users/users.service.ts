@@ -46,6 +46,7 @@ export class UsersService {
         usr.public_key = randomHash(20, 0);
         usr.surname = capitalizeFirstLetter(newUser.surname);
         usr.password = passwordHash;
+        usr.created_at = Date.now()+(2*60*60*1000);
 
         const user = new this.userModel(usr);
 

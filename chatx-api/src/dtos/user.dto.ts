@@ -14,4 +14,5 @@ export class UserDto {
   avatar?: string;
   public_key?: string;
   private_key?: string;
+  created_at?: any;
 }

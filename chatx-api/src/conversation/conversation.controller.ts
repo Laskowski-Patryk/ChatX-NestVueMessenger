@@ -8,18 +8,4 @@ import { ConversationService } from './conversation.service';
 export class ConversationController {
   constructor(private conversationService: ConversationService) {}
 
-  @Get('get')
-  public getConversations() {
-      return this.conversationService.getConversations();
-  }
-
-  @Post('create')
-  public createConversation(@Body() conversationService: ConversationDto) {
-    //   return this.userService.postUser(user);
-  }
-
-  @Post('setName')
-  public setName(@Body() conversationService: ConversationDto) {
-    //   return this.userService.postUser(user);
-  }
 }

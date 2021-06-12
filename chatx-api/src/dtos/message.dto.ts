@@ -3,6 +3,6 @@ export class MessageDto {
      id_user: string;
      id_conversation: string;
      message: string;
-     send_date: Date;
+     send_date: any;
      seen?: boolean;
 }
