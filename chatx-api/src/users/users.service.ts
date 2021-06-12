@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 import { UserDto } from '../dtos/user.dto';
 import { from, Observable, throwError } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
+var jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 
 @Injectable()
@@ -11,7 +13,6 @@ export class UsersService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<UserDto>,
   ) {}
-
   public hashPassword(password: string): Observable<string> {
     return from<string>(bcrypt.hash(password, 12));
   }
@@ -46,7 +47,7 @@ export class UsersService {
         usr.public_key = randomHash(20, 0);
         usr.surname = capitalizeFirstLetter(newUser.surname);
         usr.password = passwordHash;
-        usr.created_at = Date.now()+(2*60*60*1000);
+        usr.created_at = Date.now() + 2 * 60 * 60 * 1000;
 
         const user = new this.userModel(usr);
 
@@ -61,15 +62,68 @@ export class UsersService {
           }),
         ).pipe(
           map((user: UserDto) => {
-            const { password, ...result } = user;
-            
-            return { msg: 'Successfully registered. Check your email to verify.' };
+            // const { password, ...result } = user;
+            this.verifyEmail(user).catch(console.error);
+
+            return {
+              msg: 'Successfully registered. Check your email to verify.',
+            };
           }),
 
           catchError((e) => throwError(e)),
         );
       }),
     );
+  }
+
+  public async emailVerified(token) {
+    let secret = process.env.EMAIL_SECRET;
+    let id;
+    try{
+    id = jwt.verify(token, secret);
+    }catch(err){
+      throw new HttpException('Podano zły token', 401);
+    }
+    this.userModel
+      .updateOne(
+        { _id: id.sub },
+        {
+          email_verified: true,
+        },
+      )
+      .catch((err) => {
+        throw new HttpException(err, 404);
+      });
+      
+    return { msg: 'Updated! Now Log in. ' };
+  }
+
+  public async verifyEmail(user: UserDto) {
+    let transporter;
+    let account = nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true, // true for 465, false for other ports
+      auth: {
+        type: 'login',
+        user: process.env.EMAIL_USERNAME, // generated ethereal user
+        pass: process.env.EMAIL_PASSWORD, // generated ethereal password
+      },
+    });
+
+    const payload = { name: user.name, sub: user._id };
+    let emailToken = jwt.sign(payload, process.env.EMAIL_SECRET);
+
+    const url = `http://localhost:3000/confirmation/${emailToken}`;
+    transporter.sendMail({
+      from: '"ChatX App" <chatxautomailer@gmail.com>', // sender address
+      to: user.email,
+      subject: 'Confirm Email',
+      html: `Please click this link to confirm your email: </br><a href="${url}">${url}</a>`,
+    });
   }
 
   public async getUserByUsername(username: string): Promise<any> {

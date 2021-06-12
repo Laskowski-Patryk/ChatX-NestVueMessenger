@@ -9,9 +9,9 @@ const routes = [
     path: '/',
     name: 'MainPage',
     component: MainPage,
-    // beforeEnter: (to:any, from:any, next:any) => {
-    //   guard(to, from, next);
-    // }
+    beforeEnter: (to:any, from:any, next:any) => {
+      guard(to, from, next);
+    }
   },
   {
     path: '/signin',

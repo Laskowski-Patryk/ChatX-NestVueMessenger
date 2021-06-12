@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get,Request, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserDto } from '../dtos/user.dto';
 import { UsersService } from './users.service';
@@ -16,6 +16,10 @@ export class UsersController {
     return this.userService.getUsers();
   } 
 
+  @Get('confirmation/:token')
+  public emailVerified(@Request() req) {
+    return this.userService.emailVerified(req.params.token);
+  } 
 
   @Post('register')
   public postUser(@Body() user: UserDto) {

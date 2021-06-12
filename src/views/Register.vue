@@ -65,12 +65,12 @@ export default {
   margin: auto;
   left: clamp(2rem, 40%, 35%);
   top: 8%;
-  width: clamp(10%, 35%, 30%);
+  width: clamp(30rem, 35vw, 30vw);
   height: 86%;
   border-radius: 2vh;
   box-shadow: 0.625rem 0.625rem 1.25rem #bababa, -0.625rem -0.625rem 1.25rem #ffffff;
   box-sizing: border-box;
-  padding: clamp(2rem, 3%, 35%);
+  padding: 2rem;
   overflow: auto;
   padding-top:2rem !important;
 }

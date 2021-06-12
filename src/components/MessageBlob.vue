@@ -24,7 +24,7 @@ props: ['user','message'],
 
 
 
-<style>
+<style scoped>
 .name {
   margin-top: 10px;
   grid-column: 2/6;
