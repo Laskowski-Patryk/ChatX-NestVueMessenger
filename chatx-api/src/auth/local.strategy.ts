@@ -11,10 +11,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate(username: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(username, password);
-    if(!user.email_verified) throw new UnauthorizedException('Email not comfirmed!');
+    
     if (!user) {
       throw new UnauthorizedException();
-    }
+    }// @ts-ignore: Unreachable code error
+    if(!user._doc.email_verified) throw new UnauthorizedException('Email not comfirmed!');
     return user;
   }
 }

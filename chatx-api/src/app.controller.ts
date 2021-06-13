@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpService,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { map } from 'rxjs/operators';
 import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 
 @Controller()
 export class AppController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -13,6 +23,10 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
+  @Post('captcha')
+  async verifyCaptcha(@Request() req) {
+    return this.authService.verifyCaptcha(req.body.secret,req.body.token);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get('protected')

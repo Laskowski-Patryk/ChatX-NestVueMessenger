@@ -2,8 +2,11 @@ import { createWebHistory, createRouter } from "vue-router";
 import SignIn from "@/views/SignIn.vue";
 import Register from "@/views/Register.vue";
 import MainPage from "@/views/MainPage.vue";
+import PasswordReset from "@/views/PasswordReset.vue";
+import RecoverPassword from "@/views/RecoverPassword.vue";
+import PageNotFound from "@/views/PageNotFound.vue";
 import axios from "axios";
-import { authHeader } from "../auth-header.js";
+import { authHeader } from "../_helpers/auth-header";
 
 const routes = [
   {
@@ -30,6 +33,28 @@ const routes = [
       notSignedIn(to, from, next);
     },
     component: Register,
+  },
+  {
+    path: "/passwordreset",
+    name: "PasswordReset",
+    beforeEnter: (to: any, from: any, next: any) => {
+      notSignedIn(to, from, next);
+    },
+    component: PasswordReset,
+  },
+  {
+    path: "/recoverpassword",
+    name: "RecoverPassword",
+    children: [{ path: "/recoverpassword/:token", component: RecoverPassword }],
+    beforeEnter: (to: any, from: any, next: any) => {
+      notSignedIn(to, from, next);
+    },
+    component: RecoverPassword,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    component: PageNotFound,
+    name: 'PageNotFound'
   },
 ];
 
@@ -58,6 +83,7 @@ const notSignedIn = function(to: any, from: any, next: any) {
 
 const router = createRouter({
   history: createWebHistory(),
+  
   routes,
 });
 

@@ -28,6 +28,7 @@ export const UserSchema = new mongoose.Schema(
     public_key: { type: String, dropDups: true, unique: true },
     private_key: { type: String, dropDups: true, unique: true },
     created_at: {type: Date, default: Date.now()+(2*60*60*1000)},
+    password_reset: Boolean
   },
   { versionKey: false }, // aby nie zwracał niepotrzebnych danych
 );

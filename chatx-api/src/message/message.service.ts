@@ -34,7 +34,7 @@ export class MessageService {
       let uID = conv.id_users.user2;
       if (conv.id_users.user != id_user.id) uID = conv.id_users.user;
       const user = await this.userService.getUserById(uID.toString());// @ts-ignore: Unreachable code error
-      const nameSurname = {name: user._doc.name, surname: user._doc.name, id:user._doc._id};
+      const nameSurname = {name: user.name, surname: user.name, id:user._id};
       
       let message;
       

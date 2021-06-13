@@ -94,7 +94,11 @@
           >
         </div>
         <div v-for="err in errors" v-bind:key="err">
-          <div v-for="(error, index) in errors" v-bind:key="error" class="errors">
+          <div
+            v-for="(error, index) in errors"
+            v-bind:key="error"
+            class="errors"
+          >
             {{ error }}
             <span v-if="index != Object.keys(errors).length - 1">, </span>
           </div>
@@ -142,16 +146,14 @@ export default {
       axios
         .post("http://localhost:3000/register", this.user)
         .then((response) => {
-          if(response.status == 201)
-          this.$router.push('/signin/registered');
+          if (response.status == 201) this.$router.push("/signin/registered");
         })
         .catch((error) => {
           this.errors = [];
-          if(error.response.data.message[0] == "Login have to be unique")
-          this.errors.push('This username already exists.');
-          if(error.response.data.message[0] == "Email have to be unique")
-          this.errors.push('This email is already in use.');
-          
+          if (error.response.data.message[0] == "Login have to be unique")
+            this.errors.push("This username already exists.");
+          if (error.response.data.message[0] == "Email have to be unique")
+            this.errors.push("This email is already in use.");
         });
     },
   },
@@ -233,11 +235,6 @@ export default {
   box-shadow: 0 0 10px red;
 }
 
-#but:hover .wrong {
-  /* outline: none !important; */
-  border: 1px solid red !important;
-  box-shadow: 0 0 10px red !important;
-}
 
 .good:focus {
   /* outline: none !important; */

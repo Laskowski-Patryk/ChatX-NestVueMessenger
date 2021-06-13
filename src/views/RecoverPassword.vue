@@ -1,37 +1,31 @@
 <template>
   <div class="register">
     <div class="center">
-      <h1>Sign In</h1>
-      <h3> or <router-link to="/register">Register</router-link></h3>
-      <br /><br />
+      <h1>Provide new password for your account</h1>
+      <br />
+      <br />
       <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
-          <label>Username</label>
-          <input
-            type="text"
-            v-model="user.username"
-            class="form-control"
-            id="username-input"
-            placeholder="Your username"
-          />
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <span class="right"
-            ><a href="http://localhost:8080/passwordreset" tabindex="1"
-              >Forgot password?</a
-            >
-          </span>
           <input
             type="password"
             v-model="user.password"
-            id="password-input"
             class="form-control"
-            placeholder="Your Password"
+            id="username-input"
+            v-bind:class="passwordCheck"
+            placeholder="Enter new password"
           />
         </div>
-
+        <div class="form-group">
+          <input
+            type="password"
+            v-model="user.password2"
+            v-bind:class="password2Check"
+            class="form-control"
+            id="username-input"
+            placeholder="Renter new password"
+          />
+        </div>
         <div v-for="succ in success" v-bind:key="succ" class="success">
           {{ succ }}
         </div>
@@ -40,7 +34,9 @@
           {{ error }}
         </div>
 
-        <button id="but" @click="signIn">Sign In</button>
+        <button id="but" @click="resetPassword" data-badge="inline">
+          Reset my password
+        </button>
       </form>
     </div>
   </div>
@@ -48,68 +44,96 @@
 <script >
 import axios from "axios";
 export default {
-  name: "SignIn",
+  name: "resetPassword",
   components: {},
   data() {
     return {
       errors: [],
       success: [],
       user: {
-        username: "",
         password: "",
+        password2: "",
+        token: "",
       },
     };
   },
   methods: {
-    signIn: function (e) {
+    resetPassword: function (e) {
       e.preventDefault();
       this.errors = [];
-      if (this.user.username == "") this.errors.push("Provide your username");
-      if (this.user.password == "") this.errors.push("Provide your password");
-      if (this.errors.length > 0) return;
-      axios
-        .post("http://localhost:3000/login", this.user)
-        .then((response) => {
-          const user = {
-            token: response.data.access_token,
-            nickname: this.user.username,
-          };
+      if (this.user.password == "" || this.user.password == "") {
+        this.errors.push("Fields can't be empty");
+        return;
+      }
+      if (this.user.password != this.user.password2) {
+        this.errors.push("Passwords aren't the same");
+        return;
+      }
+      if (this.passwordCheck == "wrong" || this.password2Check == "wrong") {
+        this.errors.push("Fill corectly new passwords");
+        return;
+      }
 
-          window.localStorage.setItem("user", JSON.stringify(user));
-          this.$router.go();
+      axios
+        .post("http://localhost:3000/changepassword", this.user)
+        .then((response) => {
+            window.location.replace("http://localhost:8080/signin/changed");
         })
-        .catch((error) => {
-          this.success = [];
-          this.errors = [];
-          if (error.response.data.message)
-            this.errors.push("Wrong Username or Password");
+        .catch((err) => {
+          window.location.replace("http://localhost:8080/signin/wrong");
         });
     },
   },
   mounted() {
-    if (this.$router.path !== "/signin") {
-      this.$router.replace("/signin");
-    }
     let path = window.location.pathname;
     let segments = path.split("/");
-    if (segments[2] == "registered")
-      this.success.push(
-        "Succesfuly registered now check your email to confirm."
-      );
-    if (segments[2] == "changed")
-      this.success.push("Password succesfully changed.");
-    if (segments[2] == "updated")
-      this.success.push("Email have been verified.");
-    if (segments[2] == "wrong")
-      this.errors.push("Provided link was incorrect.");
-    if (segments[2] == "error")
-      this.errors.push("Something went wrong while verifying your email.");
+    let token = [segments[2]];
+    axios
+      .post("http://localhost:3000/verifyToken", token)
+      .then((response) => {
+        console.log(response.data.msg);
+        if (response.data.msg != "good")
+          window.location.replace("http://localhost:8080/signin/wrong");
+        this.user.token = token[0];
+      })
+      .catch((err) => {
+        window.location.replace("http://localhost:8080/signin/wrong");
+      });
+
     return;
   },
-  computed: {},
+  created() {},
+  computed: {
+    passwordCheck: function () {
+      if (this.user.password.length == 0) return;
+      if (this.user.password.length >= 5 && this.user.password.length <= 20)
+        return "good";
+      return "wrong";
+    },
+    password2Check: function () {
+      if (this.user.password2.length == 0) return;
+      if (
+        this.user.password2.length >= 5 &&
+        this.user.password2.length <= 20 &&
+        this.user.password2 == this.user.password
+      )
+        return "good";
+      return "wrong";
+    },
+  },
 };
 </script>
 <style scoped>
+.wrong:focus {
+  /* outline: none !important; */
+  border: 1px solid red;
+  box-shadow: 0 0 10px red;
+}
+.good:focus {
+  /* outline: none !important; */
+  border: 1px solid green;
+  box-shadow: 0 0 10px green;
+}
 .center {
   position: absolute;
   margin: auto;
@@ -181,5 +205,8 @@ h3 {
 .success {
   font-weight: 700;
   color: green;
+}
+.grecaptcha-badge {
+  visibility: hidden;
 }
 </style>

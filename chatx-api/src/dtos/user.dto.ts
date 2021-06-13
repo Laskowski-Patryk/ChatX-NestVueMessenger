@@ -15,4 +15,5 @@ export class UserDto {
   public_key?: string;
   private_key?: string;
   created_at?: any;
+  password_reset?: boolean;
 }

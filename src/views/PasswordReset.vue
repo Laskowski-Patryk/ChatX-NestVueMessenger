@@ -1,37 +1,28 @@
 <template>
   <div class="register">
     <div class="center">
-      <h1>Sign In</h1>
-      <h3> or <router-link to="/register">Register</router-link></h3>
-      <br /><br />
+      <h1>Reset your password</h1>
+      <br />
+      <br />
+      <label
+        >Enter your user account's verified email address and we will send you a
+        password reset link.</label
+      >
       <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
-          <label>Username</label>
           <input
             type="text"
-            v-model="user.username"
+            v-model="user.email"
             class="form-control"
             id="username-input"
-            placeholder="Your username"
+            placeholder="Enter your email address"
           />
         </div>
-        <div class="form-group">
-          <label>Password</label>
-          <span class="right"
-            ><a href="http://localhost:8080/passwordreset" tabindex="1"
-              >Forgot password?</a
-            >
-          </span>
-          <input
-            type="password"
-            v-model="user.password"
-            id="password-input"
-            class="form-control"
-            placeholder="Your Password"
-          />
-        </div>
-
+        This site is protected by reCAPTCHA and the Google
+        <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+        <a href="https://policies.google.com/terms">Terms of Service</a>
+        apply.<br />
         <div v-for="succ in success" v-bind:key="succ" class="success">
           {{ succ }}
         </div>
@@ -40,7 +31,9 @@
           {{ error }}
         </div>
 
-        <button id="but" @click="signIn">Sign In</button>
+        <button id="but" @click="resetPassword" data-badge="inline">
+          Sign In
+        </button>
       </form>
     </div>
   </div>
@@ -48,47 +41,53 @@
 <script >
 import axios from "axios";
 export default {
-  name: "SignIn",
+  name: "resetPassword",
   components: {},
   data() {
     return {
       errors: [],
       success: [],
       user: {
-        username: "",
-        password: "",
+        email: "",
       },
     };
   },
   methods: {
-    signIn: function (e) {
+    resetPassword: function (e) {
       e.preventDefault();
       this.errors = [];
-      if (this.user.username == "") this.errors.push("Provide your username");
-      if (this.user.password == "") this.errors.push("Provide your password");
-      if (this.errors.length > 0) return;
-      axios
-        .post("http://localhost:3000/login", this.user)
-        .then((response) => {
-          const user = {
-            token: response.data.access_token,
-            nickname: this.user.username,
-          };
-
-          window.localStorage.setItem("user", JSON.stringify(user));
-          this.$router.go();
-        })
-        .catch((error) => {
-          this.success = [];
-          this.errors = [];
-          if (error.response.data.message)
-            this.errors.push("Wrong Username or Password");
-        });
+      let credentials = {};
+      this.$recaptcha("login").then((token) => {
+        credentials.token = token;
+        credentials.secret = "6LfmM_AUAAAAAPOwrNo4IP-Geiyf9Bom16tT3ySx";
+        console.log(process.env.VUE_APP_EMAIL_SECRET);
+        axios
+          .post("http://localhost:3000/captcha", credentials)
+          .then((response) => {
+            if (response.data.success == true) {
+              axios
+                .post("http://localhost:3000/forgotPassword", this.user)
+                .then((response) => {
+                  this.success = [];
+                  this.errors = [];
+                  if (response.data.msg == "error")
+                    this.success.push("Message was already sent");
+                  if (response.data.msg == "sent")
+                    this.success.push("Message sent, check your email");
+                })
+                .catch((err) => {
+                  this.success = [];
+                  this.errors = [];
+                  this.errors.push("This email doesn't exists");
+                });
+            }
+          });
+      });
     },
   },
   mounted() {
-    if (this.$router.path !== "/signin") {
-      this.$router.replace("/signin");
+    if (this.$router.path !== "/passwordreset") {
+      this.$router.replace("/passwordreset");
     }
     let path = window.location.pathname;
     let segments = path.split("/");
@@ -96,8 +95,6 @@ export default {
       this.success.push(
         "Succesfuly registered now check your email to confirm."
       );
-    if (segments[2] == "changed")
-      this.success.push("Password succesfully changed.");
     if (segments[2] == "updated")
       this.success.push("Email have been verified.");
     if (segments[2] == "wrong")
@@ -106,6 +103,7 @@ export default {
       this.errors.push("Something went wrong while verifying your email.");
     return;
   },
+  created() {},
   computed: {},
 };
 </script>
@@ -181,5 +179,8 @@ h3 {
 .success {
   font-weight: 700;
   color: green;
+}
+.grecaptcha-badge {
+  visibility: hidden;
 }
 </style>

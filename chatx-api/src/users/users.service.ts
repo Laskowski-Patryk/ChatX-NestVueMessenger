@@ -47,6 +47,7 @@ export class UsersService {
         usr.public_key = randomHash(20, 0);
         usr.surname = capitalizeFirstLetter(newUser.surname);
         usr.password = passwordHash;
+        usr.password_reset = false;
         usr.created_at = Date.now() + 2 * 60 * 60 * 1000;
 
         const user = new this.userModel(usr);
@@ -76,31 +77,76 @@ export class UsersService {
     );
   }
 
+  public async verifyToken(token) {
+    let secret = process.env.EMAIL_SECRET;
+    let id;
+    try {
+      id = jwt.verify(token[0], secret);
+
+      let usr = await this.getUserById(id.sub);
+      if (usr.password_reset == false) return { msg: 'wrong' };
+    } catch (err) {
+      return { msg: 'wrong' };
+    }
+
+    return { msg: 'good' };
+  }
+
+  public async changePassword(user) {
+    let secret = process.env.EMAIL_SECRET;
+    let id;
+    try {
+      id = jwt.verify(user.token, secret);
+      await this.updateUserById(id.sub, 'password_reset', 'false');
+      let newPass = await bcrypt.hash(user.password, 12);
+      await this.updateUserById(id.sub, 'password', newPass);
+    } catch (err) {
+      return { msg: 'wrong' };
+    }
+
+    return { msg: 'good' };
+  }
+
+  public async forgotPassword(email) {
+    let user = await this.getUserByEmail(email); // @ts-ignore: Unreachable code error
+    if (user.password_reset == true) return { msg: 'error' };
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true, // true for 465, false for other ports
+      auth: {
+        type: 'login',
+        user: process.env.EMAIL_USERNAME, // generated ethereal user
+        pass: process.env.EMAIL_PASSWORD, // generated ethereal password
+      },
+    }); // @ts-ignore: Unreachable code error
+    const payload = { name: user.name, sub: user._id };
+    let emailToken = jwt.sign(payload, process.env.EMAIL_SECRET);
+
+    const url = `http://localhost:8080/RecoverPassword/${emailToken}`;
+    transporter.sendMail({
+      from: '"ChatX App" <chatxautomailer@gmail.com>', // @ts-ignore: Unreachable code error
+      to: user.email,
+      subject: 'Reset your password', // @ts-ignore: Unreachable code error
+      html: `Hello ${user.name}!\n<br> Seems like you forgot your password.<br>Click link below to reset. <br><a href="${url}">${url}</a>`,
+    });
+    this.updateUserById(user._id, 'password_reset', 'true');
+    return { msg: 'sent' };
+  }
+
   public async emailVerified(token) {
     let secret = process.env.EMAIL_SECRET;
     let id;
-    try{
-    id = jwt.verify(token, secret);
-    }catch(err){
+    try {
+      id = jwt.verify(token, secret);
+    } catch (err) {
       return { msg: 'wrong' };
     }
-    
-    this.userModel
-      .updateOne(
-        { _id: id.sub },
-        {
-          email_verified: true,
-        },
-      )
-      .catch((err) => {
-        return { msg: 'error' };
-      });
-      
+    this.updateUserById(id.sub, 'email_verified', 'true');
     return { msg: 'updated' };
   }
 
   public async verifyEmail(user: UserDto) {
-
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -121,7 +167,7 @@ export class UsersService {
       from: '"ChatX App" <chatxautomailer@gmail.com>', // sender address
       to: user.email,
       subject: 'Confirm Email',
-      html: `Please click this link to confirm your email: </br><a href="${url}">${url}</a>`,
+      html: `Hello ${user.name}!<br> Please click this link to confirm your email: <br><a href="${url}">${url}</a>`,
     });
   }
 
@@ -138,16 +184,18 @@ export class UsersService {
     if (!user) {
       throw new HttpException('Not Found', 404);
     }
-    return { ...user };
+    let x = { ...user }; // @ts-ignore: Unreachable code error
+    return x._doc;
   }
 
   public async getUserByEmail(email: string): Promise<UserDto> {
-    const user = await this.userModel.findOne({ email }).exec();
-    console.log(user);
+    const user = await this.userModel.findOne({ email }).exec(); // @ts-ignore: Unreachable code error
+
     if (!user) {
       throw new HttpException('Not Found', 404);
     }
-    return { ...user };
+    let x = { ...user }; // @ts-ignore: Unreachable code error
+    return x._doc;
   }
 
   public async deleteUserById(id: string): Promise<any> {
@@ -164,12 +212,13 @@ export class UsersService {
     propertyValue: string,
   ): Promise<UserDto> {
     const user = await this.userModel
-      .findOneAndUpdate({ id }, { [propertyName]: propertyValue })
+      .findOneAndUpdate({ _id: id }, { [propertyName]: propertyValue })
       .exec();
     if (!user) {
       throw new HttpException('Not Found', 404);
     }
-    return { ...user };
+    let x = { ...user }; // @ts-ignore: Unreachable code error
+    return x._doc;
   }
 }
 

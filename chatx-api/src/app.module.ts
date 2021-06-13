@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
@@ -12,12 +12,12 @@ import { ConversationModule } from './conversation/conversation.module';
   imports: [
     MongooseModule.forRoot(
       'mongodb+srv://lasek:lasek123@cluster0.8f7wo.mongodb.net/chatx',
-      { useCreateIndex: true },   // Służy do wyłapania tych samych loginów i maili
+      { useCreateIndex: true , useFindAndModify: false},   // Służy do wyłapania tych samych loginów i maili
     ),
     UsersModule,
     AuthModule,
     MessageModule,
-    ConversationModule,
+    ConversationModule
   ],
   controllers: [AppController],
   providers: [AppService],
