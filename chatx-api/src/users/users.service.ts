@@ -82,8 +82,9 @@ export class UsersService {
     try{
     id = jwt.verify(token, secret);
     }catch(err){
-      throw new HttpException('Podano zły token', 401);
+      return { msg: 'wrong' };
     }
+    
     this.userModel
       .updateOne(
         { _id: id.sub },
@@ -92,18 +93,16 @@ export class UsersService {
         },
       )
       .catch((err) => {
-        throw new HttpException(err, 404);
+        return { msg: 'error' };
       });
       
-    return { msg: 'Updated! Now Log in. ' };
+    return { msg: 'updated' };
   }
 
   public async verifyEmail(user: UserDto) {
-    let transporter;
-    let account = nodemailer.createTestAccount();
 
     // create reusable transporter object using the default SMTP transport
-    transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
       secure: true, // true for 465, false for other ports

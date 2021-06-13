@@ -3,7 +3,7 @@
     <div class="btn-logo">
       <img class="logo-image" src="../assets/images/Logo2.png" />
     </div>
-    <div class="btn-options"></div>
+    <div class="btn-options" @click="logout"></div>
     <div class="content-grid">
       <div class="main-conversations">
         <MessageBlob user="Jan Kowalski" message="Pozdrawiam"></MessageBlob>
@@ -29,6 +29,12 @@ export default {
     MessageBlob,
     ChatModule,
   },
+  methods:{
+    logout: function(){
+        window.localStorage.removeItem('user');
+        this.$router.go();
+    }
+  }
 };
 </script>
 

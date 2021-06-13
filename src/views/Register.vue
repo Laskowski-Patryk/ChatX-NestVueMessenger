@@ -2,7 +2,7 @@
   <div class="register">
     <div class="center">
       <h1>Register</h1>
-      <h3>or <router-link to="/signin">Sign in</router-link></h3>
+      <h3> or <router-link to="/signin">Sign in</router-link></h3>
       <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
@@ -94,13 +94,13 @@
           >
         </div>
         <div v-for="err in errors" v-bind:key="err">
-          <div v-for="(error, index) in errors" v-bind:key="error">
+          <div v-for="(error, index) in errors" v-bind:key="error" class="errors">
             {{ error }}
             <span v-if="index != Object.keys(errors).length - 1">, </span>
           </div>
         </div>
         <button id="but" @click="register" :disabled="!allCheck">
-          Zarejestruj się
+          Register
         </button>
       </form>
     </div>
@@ -142,11 +142,16 @@ export default {
       axios
         .post("http://localhost:3000/register", this.user)
         .then((response) => {
-          console.log(response);
+          if(response.status == 201)
+          this.$router.push('/signin/registered');
         })
         .catch((error) => {
           this.errors = [];
-          this.errors.push(error.response.data.message[0]);
+          if(error.response.data.message[0] == "Login have to be unique")
+          this.errors.push('This username already exists.');
+          if(error.response.data.message[0] == "Email have to be unique")
+          this.errors.push('This email is already in use.');
+          
         });
     },
   },
@@ -305,5 +310,9 @@ button:disabled {
 h1,
 h3 {
   display: inline;
+}
+.errors {
+  font-weight: 700;
+  color: red;
 }
 </style>
