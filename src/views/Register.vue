@@ -2,7 +2,7 @@
   <div class="register">
     <div class="center">
       <h1>Register</h1>
-      <h3> or <router-link to="/signin">Sign in</router-link></h3>
+      <h3>or <router-link to="/signin">Sign in</router-link></h3>
       <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
@@ -143,18 +143,34 @@ export default {
       if (this.cityCheck == "wrong") return;
       if (this.checkboxCheck == "wrong") return;
 
-      axios
-        .post("http://localhost:3000/register", this.user)
-        .then((response) => {
-          if (response.status == 201) this.$router.push("/signin/registered");
-        })
-        .catch((error) => {
-          this.errors = [];
-          if (error.response.data.message[0] == "Login have to be unique")
-            this.errors.push("This username already exists.");
-          if (error.response.data.message[0] == "Email have to be unique")
-            this.errors.push("This email is already in use.");
-        });
+      let credentials = {};
+      this.$recaptcha("login").then((token) => {
+        credentials.token = token;
+        credentials.secret = "6LfmM_AUAAAAAPOwrNo4IP-Geiyf9Bom16tT3ySx";
+        axios
+          .post("http://localhost:3000/captcha", credentials)
+          .then((response) => {
+            if (response.data.success == true) {
+              axios
+                .post("http://localhost:3000/register", this.user)
+                .then((response) => {
+                  if (response.status == 201)
+                    this.$router.push("/signin/registered");
+                })
+                .catch((error) => {
+                  this.errors = [];
+                  if (
+                    error.response.data.message[0] == "Login have to be unique"
+                  )
+                    this.errors.push("This username already exists.");
+                  if (
+                    error.response.data.message[0] == "Email have to be unique"
+                  )
+                    this.errors.push("This email is already in use.");
+                });
+            }
+          });
+      });
     },
   },
   computed: {
@@ -234,7 +250,6 @@ export default {
   border: 1px solid red;
   box-shadow: 0 0 10px red;
 }
-
 
 .good:focus {
   /* outline: none !important; */

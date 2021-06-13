@@ -60,7 +60,6 @@ export default {
       this.$recaptcha("login").then((token) => {
         credentials.token = token;
         credentials.secret = "6LfmM_AUAAAAAPOwrNo4IP-Geiyf9Bom16tT3ySx";
-        console.log(process.env.VUE_APP_EMAIL_SECRET);
         axios
           .post("http://localhost:3000/captcha", credentials)
           .then((response) => {

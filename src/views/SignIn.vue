@@ -82,7 +82,7 @@ export default {
           this.success = [];
           this.errors = [];
           if (error.response.data.message)
-            this.errors.push("Wrong Username or Password");
+            this.errors.push(error.response.data.message);
         });
     },
   },
