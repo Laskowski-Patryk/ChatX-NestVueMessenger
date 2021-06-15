@@ -149,11 +149,11 @@ export default {
         credentials.token = token;
         credentials.secret = "6LfmM_AUAAAAAPOwrNo4IP-Geiyf9Bom16tT3ySx";
         axios
-          .post("http://localhost:3000/captcha", credentials)
+          .post("/captcha", credentials)
           .then((response) => {
             if (response.data.success == true) {
               axios
-                .post("http://localhost:3000/register", this.user)
+                .post("/register", this.user)
                 .then((response) => {
                   if (response.status == 201)
                     this.$router.push("/signin/registered");

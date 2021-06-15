@@ -5,7 +5,7 @@
       <div class="avatar">
       <img src="../assets/images/simple-avatar.png" />
     </div>
-      <div class="name">{{user}}</div>
+      <div class="name">{{name}} {{surname}}</div>
       <div class="lastMessage">{{message}}</div>
     </div>
   </div>
@@ -15,8 +15,10 @@
 
 <script>
 export default {
-props: ['user','message'],
+props: ['name','surname','message'],
+beforeCreate(){
 
+}
 };
 
 </script>

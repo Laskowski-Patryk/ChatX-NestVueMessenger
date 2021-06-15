@@ -12,8 +12,10 @@ export class ConversationService {
   public async getConversationId(user, user2): Promise<ConversationDto> {
     const conversation = await this.conversationModel
       .findOne({
-        'id_users.user': user,
-        'id_users.user2': user2,
+        $or: [
+          { 'id_users.user': user, 'id_users.user2': user2 },
+          { 'id_users.user': user2, 'id_users.user2': user },
+        ],
       })
       .exec();
     return conversation;
@@ -22,7 +24,7 @@ export class ConversationService {
   public async getAllConversations(
     id_user,
     conversationsToLoad,
-    alreadyLoaded
+    alreadyLoaded,
   ): Promise<ConversationDto[]> {
     const all = await this.conversationModel
       .find({

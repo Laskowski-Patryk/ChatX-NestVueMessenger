@@ -5,8 +5,7 @@ import MainPage from "@/views/MainPage.vue";
 import PasswordReset from "@/views/PasswordReset.vue";
 import RecoverPassword from "@/views/RecoverPassword.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
-import axios from "axios";
-import { authHeader } from "../_helpers/auth-header";
+import axios from '../axios';
 
 const routes = [
   {
@@ -60,7 +59,7 @@ const routes = [
 
 const guard = function(to: any, from: any, next: any) {
   axios
-    .get("http://localhost:3000/protected", { headers: authHeader() })
+    .get("/protected")
     .then((response) => {
       next();
     })
@@ -72,7 +71,7 @@ const guard = function(to: any, from: any, next: any) {
 
 const notSignedIn = function(to: any, from: any, next: any) {
   axios
-    .get("http://localhost:3000/protected", { headers: authHeader() })
+    .get("/protected")
     .then((response) => {
       window.location.href = "/";
     })

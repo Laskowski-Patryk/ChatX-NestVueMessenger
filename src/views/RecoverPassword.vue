@@ -75,7 +75,7 @@ export default {
       }
 
       axios
-        .post("http://localhost:3000/changepassword", this.user)
+        .post("/changepassword", this.user)
         .then((response) => {
             window.location.replace("http://localhost:8080/signin/changed");
         })
@@ -89,9 +89,8 @@ export default {
     let segments = path.split("/");
     let token = [segments[2]];
     axios
-      .post("http://localhost:3000/verifyToken", token)
+      .post("/verifyToken", token)
       .then((response) => {
-        console.log(response.data.msg);
         if (response.data.msg != "good")
           window.location.replace("http://localhost:8080/signin/wrong");
         this.user.token = token[0];

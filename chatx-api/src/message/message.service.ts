@@ -22,22 +22,21 @@ export class MessageService {
     conversationsToLoad: number,
     alreadyLoaded: number,
   ): Promise<MessageDto[]> {
+
     let conversations = await this.conversationService.getAllConversations(
-      id_user.id,
+      id_user,
       conversationsToLoad,
       alreadyLoaded,
     );
-
     let messages = [];
-
     for (const conv of conversations) {
       let uID = conv.id_users.user2;
-      if (conv.id_users.user != id_user.id) uID = conv.id_users.user;
+      if (conv.id_users.user != id_user) uID = conv.id_users.user;
       const user = await this.userService.getUserById(uID.toString());// @ts-ignore: Unreachable code error
-      const nameSurname = {name: user.name, surname: user.name, id:user._id};
-      
+
+      const nameSurname = {name: user.name, surname: user.surname, id:user._id};
       let message;
-      
+     
       message = (await this.messageModel
         .find({ id_conversation: conv._id })
         .sort({ send_date: -1 })
@@ -46,7 +45,6 @@ export class MessageService {
         message.unshift(nameSurname);
       messages.push(message);
     }
-
     if (!messages || !messages[0])
       throw new HttpException('No messages to load', 400);
 
@@ -88,7 +86,8 @@ export class MessageService {
     } else {
       idConv = conversation._id;
     }
-    message.id_user = user._id;
+
+    message.id_user = user.id;
     message.id_conversation = idConv;
     message.message = msg;
     message.send_date = Date.now() + 2 * 60 * 60 * 1000;

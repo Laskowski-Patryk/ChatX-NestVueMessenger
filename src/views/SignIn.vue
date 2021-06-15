@@ -68,14 +68,16 @@ export default {
       if (this.user.password == "") this.errors.push("Provide your password");
       if (this.errors.length > 0) return;
       axios
-        .post("http://localhost:3000/login", this.user)
+        .post("/login", this.user)
         .then((response) => {
           const user = {
             token: response.data.access_token,
+            id: response.data.id,
             nickname: this.user.username,
           };
-
+          
           window.localStorage.setItem("user", JSON.stringify(user));
+           window.localStorage.setItem("userid", response.data.id);
           this.$router.go();
         })
         .catch((error) => {

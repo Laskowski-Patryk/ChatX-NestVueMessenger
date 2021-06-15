@@ -17,7 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new HttpException('Wrong username or password',403);
     }// @ts-ignore: Unreachable code error
-    if(!user._doc.email_verified) throw new HttpException('Email not confirmed!',403);
-    return user;
+    if(!user._doc.email_verified) throw new HttpException('Email not confirmed!',403);// @ts-ignore: Unreachable code error
+    return user._doc;
   }
 }
