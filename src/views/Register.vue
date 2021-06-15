@@ -3,6 +3,7 @@
     <div class="center-form">
       <h1>Register</h1>
       <h3>&nbsp;or <router-link to="/signin">Sign in</router-link></h3>
+      <br /><br />
       <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
@@ -260,7 +261,6 @@ export default {
 .personal {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: minmax(1rem, auto);
 }
 .center-form {
   /* max-height: 92%; */
@@ -271,6 +271,7 @@ export default {
   padding: 4.75%;
   overflow: auto;
   padding-top: 2rem !important;
+  height: 51rem;
 }
 
 @media screen and (min-width: 1281px) {
