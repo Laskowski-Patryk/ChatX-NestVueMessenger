@@ -1,8 +1,8 @@
 <template>
   <div class="register">
-    <div class="center">
+    <div class="center-form">
       <h1>Register</h1>
-      <h3>or <router-link to="/signin">Sign in</router-link></h3>
+      <h3>&nbsp;or <router-link to="/signin">Sign in</router-link></h3>
       <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
@@ -262,23 +262,35 @@ export default {
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: minmax(1rem, auto);
 }
-.center {
-  position: absolute;
-  margin: auto;
-  left: clamp(2rem, 40%, 35%);
-  top: 6%;
-  width: clamp(30rem, 35vw, 30vw);
-  height: auto;
-  max-height: 92%;
+.center-form {
+  /* max-height: 92%; */
   border-radius: 2vh;
   box-shadow: 0.625rem 0.625rem 1.25rem #bababa,
     -0.625rem -0.625rem 1.25rem #ffffff;
   box-sizing: border-box;
-  padding: 2rem;
+  padding: 4.75%;
   overflow: auto;
   padding-top: 2rem !important;
 }
 
+@media screen and (min-width: 1281px) {
+  .center-form {
+    grid-column: 5/9;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .center-form {
+    grid-column: 2/12;
+  }
+}
+
+.register {
+  padding: clamp(2rem, 2%, 5rem);
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
 button {
   margin: 25px 0 0 0;
   width: 100%;

@@ -1,5 +1,4 @@
 <template>
-  <vue-recaptcha sitekey="Your key here"></vue-recaptcha>
   <div class="content">
     <router-view></router-view>
   </div>
@@ -12,8 +11,6 @@ export default {
 };
 </script>
 <style>
-#app {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-}
-.grecaptcha-badge { visibility: hidden; }
+@import './assets/css/styles.css';
+
 </style>

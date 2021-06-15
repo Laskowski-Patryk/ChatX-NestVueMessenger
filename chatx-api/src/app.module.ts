@@ -7,6 +7,9 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MessageModule } from './message/message.module';
 import { ConversationModule } from './conversation/conversation.module';
+import { MailerController } from './mailer/mailer.controller';
+import { MailerService } from './mailer/mailer.service';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -17,9 +20,10 @@ import { ConversationModule } from './conversation/conversation.module';
     UsersModule,
     AuthModule,
     MessageModule,
-    ConversationModule
+    ConversationModule,
+    MailerModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, MailerController],
+  providers: [AppService, MailerService],
 })
 export class AppModule {}

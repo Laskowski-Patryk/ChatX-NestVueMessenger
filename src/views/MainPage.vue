@@ -39,19 +39,7 @@ export default {
 </script>
 
 <style>
-#app {
-  height: 96vh;
-  width: 98vw;
-  position: absolute;
-  top: 2vh;
-  left: 1vw;
-  right: 1vw;
-  bottom: 0;
-  border-radius: 5vh;
-  background: #e0e0e0;
-  box-shadow: inset 0.625rem 0.625rem 21px #5a5a5a,
-    inset -0.625rem -0.625rem 21px #ffffff;
-}
+
 .btn-logo {
   float: left;
   cursor: pointer;

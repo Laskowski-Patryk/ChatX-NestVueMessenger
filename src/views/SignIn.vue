@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="register" >
     <div class="center">
       <h1>Sign In</h1>
       <h3> or <router-link to="/register">Register</router-link></h3>
