@@ -6,34 +6,46 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { MessageService } from './message/message.service';
 
 @WebSocketGateway(3001)
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
+  constructor(private readonly messageService: MessageService) {}
+
   @WebSocketServer() wss: Server;
 
   private logger: Logger = new Logger('AppGateway');
 
   @SubscribeMessage('msgToServer')
-  handleMessage(
+  async handleMessage(
     client: Socket,
-    message: { sender: string; room: string; message: string },
-  ): void {
-    this.wss.to(message.room).emit('msgToClient', message);
+    message: any,
+  ):Promise<any> {
+    
+    let x = await this.messageService.send(
+      message.message.msg,
+      message.message.user,
+      message.message.user2,
+    );
+    this.wss.to(message.room).emit('msgToClient', x);
   }
 
   @SubscribeMessage('joinRoom')
   handleJoinRoom(client: Socket, room: string): void {
     client.join(room);
+    this.logger.log(` ${client.id} joined room ${room}`);
     client.emit('joinedRoom', room);
   }
 
   @SubscribeMessage('leaveRoom')
   handleLeaveRoom(client: Socket, room: string): void {
     client.leave(room);
+    this.logger.log(` ${client.id} left room ${room}`);
     client.emit('leftRoom', room);
   }
 

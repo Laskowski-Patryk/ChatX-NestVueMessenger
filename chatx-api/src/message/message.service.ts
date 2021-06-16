@@ -83,13 +83,13 @@ export class MessageService {
     const mes = new MessageDto();
     const message = new this.messageModel(mes);
     let conversation = await this.conversationService.getConversationId(
-      user.id,
+      user,
       user2,
     );
 
     if (!conversation) {
       let createConversation = await this.conversationService
-        .createConversation(user.id, user2)
+        .createConversation(user, user2)
         .catch((err) => {
           throw new HttpException(err, 400);
         });
@@ -98,13 +98,13 @@ export class MessageService {
       idConv = conversation._id;
     }
 
-    message.id_user = user.id;
+    message.id_user = user;
     message.id_conversation = idConv;
     message.message = msg;
     message.send_date = Date.now() + 2 * 60 * 60 * 1000;
     message.save().catch((err) => {
       throw new HttpException('Something went wrong', 400);
     });
-    return { message: 'Sent' };
+    return message;
   }
 }

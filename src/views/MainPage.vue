@@ -9,7 +9,7 @@
       <div v-for="conversation in conversations" v-bind:key="conversation">
         <MessageBlob
           v-for="conv in conversation"
-          v-bind:key="conv"
+          v-bind:key="conv[1].seen"
           :name="conv[0].name"
           :surname="conv[0].surname"
           :message="conv[1].message"
@@ -83,13 +83,17 @@ export default {
       e.preventDefault();
 
       if (message == "") return;
-      let message = { msg: this.message, user2: this.activeUser };
-      axios
-        .post("message/send", message)
-        .then((res) => {})
-        .catch((error) => {
-          console.log(error);
-        });
+      let message = {
+        msg: this.message,
+        user: this.userID,
+        user2: this.activeUser,
+      };
+      this.socket.emit("msgToServer", {
+        sender: this.userID,
+        room: this.conversationID,
+        message: message,
+      });
+      this.message = "";
     },
     logout: function () {
       window.localStorage.removeItem("user");
@@ -97,7 +101,6 @@ export default {
     },
     changeConv: function (id) {
       this.conversationID = id;
-      this.socket.emit("msgToServer", id);
       this.messages = [];
       for (let i = 0; i < this.conversations[0].length; i++) {
         for (let j = 1; j < this.conversations[0][i].length; j++) {
@@ -111,7 +114,9 @@ export default {
         this.messages[0].seen == false &&
         this.messages[0].id_user != this.userID
       ) {
+
         this.messages[0].seen = true;
+
         let oo = { msgID: this.messages[0]._id };
         axios
           .post("message/makeasseen", oo)
@@ -129,6 +134,42 @@ export default {
     position: function (id) {
       if (id == this.userID) return "right";
       return "left";
+    },
+    receiveChatMessage(msg) {
+      if (msg.id_conversation == this.conversationID) {
+        this.messages.push(msg);
+        setTimeout(() => {
+          document.getElementById("last").scrollIntoView();
+        }, 0);
+        for (let i = 0; i < this.conversations[0].length; i++) {
+          if (
+            this.conversations[0][i][1].id_conversation == msg.id_conversation
+          ) {
+            msg.seen=true;
+            this.conversations[0][i].splice(1, 0, msg);
+            this.conversations[0].sort((a, b) => {
+              if (a[1].send_date < b[1].send_date) {
+                return 1;
+              } else return -1;
+            });
+            return;
+          }
+        }
+      } else {
+        for (let i = 0; i < this.conversations[0].length; i++) {
+          if (
+            this.conversations[0][i][1].id_conversation == msg.id_conversation
+          ) {
+            this.conversations[0][i].splice(1, 0, msg);
+            this.conversations[0].sort((a, b) => {
+              if (a[1].send_date < b[1].send_date) {
+                return 1;
+              } else return -1;
+            });
+            return;
+          }
+        }
+      }
     },
   },
   beforeCreate() {
@@ -153,6 +194,7 @@ export default {
           this.messages[0].seen == false &&
           this.messages[0].id_user != this.userID
         ) {
+          this.messages[0].seen = true;
           let oo = { msgID: this.messages[0]._id };
           axios
             .post("message/makeasseen", oo)
@@ -161,6 +203,7 @@ export default {
               console.log(error);
             });
           this.messages[0].seen = true;
+
         }
         this.messages.reverse();
         setTimeout(() => {
@@ -172,12 +215,23 @@ export default {
       });
   },
   created: function () {
-
     this.socket = io("http://localhost:3001");
-    // for(const )
     this.socket.on("connect", () => {
       console.log(this.socket.id);
     });
+
+    this.socket.on("msgToClient", (msg) => {
+      this.receiveChatMessage(msg);
+    });
+
+    axios
+      .get("conversation/getAll")
+      .then((res) => {
+        for (const data of res.data) this.socket.emit("joinRoom", data._id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 </script>
