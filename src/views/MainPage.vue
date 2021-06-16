@@ -9,23 +9,26 @@
       <div v-for="conversation in conversations" v-bind:key="conversation">
         <MessageBlob
           v-for="conv in conversation"
-          v-bind:key="conv[1].seen"
+          v-bind:key="conv[1]"
           :name="conv[0].name"
           :surname="conv[0].surname"
           :message="conv[1].message"
           :date="conv[1].send_date"
           :seen="conv[1].seen"
           :id="conv[1].id_user"
+          :sel="
+            conv[1].id_conversation == conversationID ? 'selected' : 'normal'
+          "
           @click="changeConv(conv[1].id_conversation)"
           class="msg"
         ></MessageBlob>
       </div>
     </div>
     <div class="chat-module">
-      <div class="over">
+      <div class="over" id="over" v-on:scroll="handleScroll">
         <div
           v-for="(msg, index) in messages"
-          v-bind:key="index"
+          v-bind:key="msg"
           class="message"
           :class="position(msg.id_user)"
         >
@@ -76,6 +79,9 @@ export default {
       conversationID: null,
       activeUser: null,
       socket: null,
+      scrollTop: null,
+      conversationsToLoad: 6,
+      messagesToLoad: 12,
     };
   },
   methods: {
@@ -114,7 +120,6 @@ export default {
         this.messages[0].seen == false &&
         this.messages[0].id_user != this.userID
       ) {
-
         this.messages[0].seen = true;
 
         let oo = { msgID: this.messages[0]._id };
@@ -145,7 +150,7 @@ export default {
           if (
             this.conversations[0][i][1].id_conversation == msg.id_conversation
           ) {
-            msg.seen=true;
+            msg.seen = true;
             this.conversations[0][i].splice(1, 0, msg);
             this.conversations[0].sort((a, b) => {
               if (a[1].send_date < b[1].send_date) {
@@ -171,10 +176,51 @@ export default {
         }
       }
     },
+    handleScroll: function (event) {
+      let x = document.getElementById("over").scrollHeight;
+      if (document.getElementById("over").scrollTop == 0) {
+        let y = document.getElementById("over").scrollHeight;
+        document.getElementById("over").scrollTop = 1;
+        //  document.getElementById("over").scrollTop = x;
+
+        const options = {
+          conversation: this.conversationID,
+          messagesToLoad: this.messagesToLoad,
+          alreadyLoaded: this.messages.length,
+        };
+        axios
+          .post("message/scrollLoad", options)
+          .then((res) => {
+            let index = 0;
+            for (let i = 0; i < this.conversations[0].length; i++) {
+              if (
+                this.conversations[0][i][1].id_conversation ==
+                res.data[0].id_conversation
+              ) {
+                index = i;
+                break;
+              }
+            }
+            res.data.forEach((element) => {
+              this.messages.unshift(element); // TODO save load to conversation
+              this.conversations[0][index].push(element);
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
   },
-  beforeCreate() {
+  beforeCreate() {},
+  created: function () {
+    const options = {
+      messagesToLoad: this.messagesToLoad,
+      conversationsToLoad: this.conversationsToLoad,
+      alreadyLoaded: this.messages.length,
+    };
     axios
-      .get("message/loadAll")
+      .post("message/loadAll", options)
       .then((res) => {
         let i = 0;
         res.data.sort((a, b) => {
@@ -203,7 +249,6 @@ export default {
               console.log(error);
             });
           this.messages[0].seen = true;
-
         }
         this.messages.reverse();
         setTimeout(() => {
@@ -213,8 +258,7 @@ export default {
       .catch((error) => {
         this.errors.push(error.response.data.message);
       });
-  },
-  created: function () {
+
     this.socket = io("http://localhost:3001");
     this.socket.on("connect", () => {
       console.log(this.socket.id);
@@ -282,8 +326,8 @@ export default {
   border-radius: 25px;
   box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 0.625rem #ffffff;
 }
-
 .st {
+  text-align: left;
   max-width: 60%;
   border-radius: 2vh;
   position: relative;
@@ -291,6 +335,7 @@ export default {
   margin-top: 1rem;
   box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #ffffff;
   display: inline-block;
+  overflow: hidden;
 }
 .right {
   text-align: right;
@@ -358,6 +403,7 @@ export default {
 }
 .over {
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 2rem;
   padding-bottom: 1rem;
 }

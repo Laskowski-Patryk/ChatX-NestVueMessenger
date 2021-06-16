@@ -1,6 +1,6 @@
 <template>
   <div class="blob">
-    <div class="conversation">
+    <div class="conversation" :class="sel">
       <div class="avatar">
         <img src="../assets/images/simple-avatar.png" />
       </div>
@@ -18,7 +18,7 @@
 <script>
 import moment from "moment";
 export default {
-  props: ["name", "surname", "message", "seen", "date", "id"],
+  props: ["name", "surname", "message", "seen", "date", "id","sel"],
   data() {
     return {
       name1: "",
@@ -41,6 +41,20 @@ export default {
     let time = Date.parse(this.date);
     time -= 2 * 60 * 60 * 1000;
     this.date1 = moment(time).format("DD-MM-YYYY HH:mm");
+  },
+  watch: {
+    seen: function () {
+      this.seen1 = this.seen;
+    },
+    message: function () {
+      this.message1 = this.message;
+    },
+    convID: function () {
+      this.convID1 = this.convID;
+    },
+    selectedID: function () {
+      this.selectedID1 = this.selectedID;
+    },
   },
 };
 </script>
@@ -89,7 +103,9 @@ export default {
   box-shadow: inset 10px 10px 20px #bababa, inset -10px -10px 20px #ffffff;
   cursor: pointer;
 }
-
+.selected{
+  box-shadow: inset 10px 10px 20px #bababa, inset -10px -10px 20px #ffffff !important;
+}
 .conversation {
   font-family: "Montserrat", sans-serif;
   font-weight: 500;

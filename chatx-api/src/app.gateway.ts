@@ -6,9 +6,8 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Logger, UseGuards } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { MessageService } from './message/message.service';
 
 @WebSocketGateway(3001)

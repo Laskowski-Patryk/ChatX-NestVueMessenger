@@ -15,14 +15,25 @@ import { MessageService } from './message.service';
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  @Get('scrollLoad')
+  @Post('scrollLoad')
   public scrollLoad(@Request() req): Promise<MessageDto[]> {
-    return this.messageService.scrollLoad(req.body.conversation, 4, 0); // (req.user, ile zaladowac, ile już załadowanych)
+    console.log(req.body);
+    return this.messageService.scrollLoad(
+      req.body.conversation,
+      req.body.messagesToLoad,
+      req.body.alreadyLoaded,
+    ); // (req.user, ile zaladowac, ile już załadowanych)
   }
 
-  @Get('loadAll')
-  public loadAll(@Headers() headers): Promise<MessageDto[]> {
-    return this.messageService.loadAll(headers.user, 24, 4, 0); // (req.user, ile zaladowac, ile już załadowanych)
+  @Post('loadAll')
+  public loadAll(@Request() req, @Headers() headers): Promise<MessageDto[]> {
+    console.log(req.body);
+    return this.messageService.loadAll(
+      headers.user,
+      req.body.messagesToLoad,
+      req.body.conversationsToLoad,
+      req.body.alreadyLoaded,
+    ); // (req.user, ile zaladowac, ile już załadowanych)
   }
 
   @Post('send')
@@ -34,5 +45,4 @@ export class MessageController {
   public makeasseen(@Request() req) {
     return this.messageService.makeasseen(req.body.msgID);
   }
-
 }

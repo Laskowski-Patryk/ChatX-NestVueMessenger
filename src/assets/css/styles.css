@@ -33,3 +33,18 @@ img::selection {
   background-color: transparent;
   color: #000;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: .65rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #cacaca;
+  border-radius: 10px;
+}
