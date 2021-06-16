@@ -63,12 +63,12 @@ export class MessageService {
   }
   
   public async scrollLoad(
-    conversation: ConversationDto,
+    conversation: string,
     loadCount: number,
     loaded: number,
   ): Promise<MessageDto[]> {
     const messages = await this.messageModel
-      .find({ id_conversation: conversation._id })
+      .find({ id_conversation: conversation })
       .sort({ send_date: -1 })
       .skip(loaded)
       .limit(loadCount)
