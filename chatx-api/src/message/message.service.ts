@@ -48,9 +48,20 @@ export class MessageService {
     if (!messages || !messages[0])
       throw new HttpException('No messages to load', 400);
 
+      
+
     return messages;
   }
 
+  public async makeasseen(msgID:string){
+    const msg = await this.messageModel
+      .findOneAndUpdate({ _id: msgID }, { seen: true })
+      .exec();
+      if (!msg) {
+        throw new HttpException('Not Found', 404);
+      }
+  }
+  
   public async scrollLoad(
     conversation: ConversationDto,
     loadCount: number,

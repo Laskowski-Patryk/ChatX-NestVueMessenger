@@ -21,3 +21,15 @@
 .grecaptcha-badge {
   visibility: hidden;
 }
+img::-moz-selection {
+  background-color: transparent;
+  color: #000;
+}
+
+img{
+  -webkit-user-drag: none;
+}
+img::selection {
+  background-color: transparent;
+  color: #000;
+}

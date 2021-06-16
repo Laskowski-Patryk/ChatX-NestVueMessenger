@@ -174,7 +174,7 @@ export default {
   created: function () {
 
     this.socket = io("http://localhost:3001");
-    for(const )
+    // for(const )
     this.socket.on("connect", () => {
       console.log(this.socket.id);
     });

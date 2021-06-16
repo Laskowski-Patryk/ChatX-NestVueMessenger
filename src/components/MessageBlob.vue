@@ -1,12 +1,14 @@
 <template>
   <div class="blob">
-    
     <div class="conversation">
       <div class="avatar">
-      <img src="../assets/images/simple-avatar.png" />
-    </div>
-      <div class="name">{{name}} {{surname}}</div>
-      <div class="lastMessage">{{message}}</div>
+        <img src="../assets/images/simple-avatar.png" />
+      </div>
+      <div class="name">{{ name1 }} {{ surname1 }}</div>
+      <div class="date">{{ date1 }}</div>
+      <div class="lastMessage" :class="seen1 == false ? 'bold' : 'normal'">
+        {{ message1 }}
+      </div>
     </div>
   </div>
 </template>
@@ -14,30 +16,64 @@
 
 
 <script>
+import moment from "moment";
 export default {
-props: ['name','surname','message'],
-beforeCreate(){
+  props: ["name", "surname", "message", "seen", "date", "id"],
+  data() {
+    return {
+      name1: "",
+      surname1: "",
+      message1: "",
+      seen1: "",
+      date1: "",
+    };
+  },
 
-}
+  mounted() {
+    this.name1 = this.name;
+    this.surname1 = this.surname;
+    this.message1 = this.message;
+    if (window.localStorage.getItem("userid") == this.id) {
+      this.seen1 = true;
+    } else {
+      this.seen1 = this.seen;
+    }
+    let time = Date.parse(this.date);
+    time -= 2 * 60 * 60 * 1000;
+    this.date1 = moment(time).format("DD-MM-YYYY HH:mm");
+  },
 };
-
 </script>
 
 
 
 
 <style scoped>
+.bold {
+  font-weight: 800;
+  opacity: 1;
+}
+.date {
+  grid-column: 7/8;
+  grid-row: 2;
+  font-size: 0.7rem;
+  margin-right: 1rem;
+}
 .name {
   margin-top: 10px;
   grid-column: 2/6;
   grid-row: 1;
-  font-size:1.1rem;
+  font-size: 1.1rem;
 }
-.lastMessage{
-  grid-column: 2/6;
+.lastMessage {
+  grid-column: 2/7;
   grid-row: 2;
-  opacity: .7;
-  margin-top:-.5rem;
+  opacity: 0.7;
+  margin-top: -0.5rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 80%;
 }
 .avatar {
   width: 80px;
@@ -56,7 +92,7 @@ beforeCreate(){
 
 .conversation {
   font-family: "Montserrat", sans-serif;
-  font-weight: 700;
+  font-weight: 500;
   color: black;
   width: 85%;
   height: 80px;

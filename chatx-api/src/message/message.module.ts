@@ -6,6 +6,7 @@ import { MessageService } from './message.service';
 import { MessageSchema } from '../schemas/message.schema';
 import { ConversationModule } from '../conversation/conversation.module';
 import { UsersModule } from '../users/users.module';
+import { AppGateway } from '../app.gateway';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { UsersModule } from '../users/users.module';
     UsersModule,
   ],
   controllers: [MessageController],
-  providers: [MessageService],
+  providers: [MessageService, AppGateway],
   exports: [MessageService],
 })
 export class MessageModule {}

@@ -10,6 +10,7 @@ import { ConversationModule } from './conversation/conversation.module';
 import { MailerController } from './mailer/mailer.controller';
 import { MailerService } from './mailer/mailer.service';
 import { MailerModule } from './mailer/mailer.module';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
