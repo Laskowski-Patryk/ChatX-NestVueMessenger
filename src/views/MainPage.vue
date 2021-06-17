@@ -3,10 +3,19 @@
     <div class="btn-logo">
       <img class="logo-image" src="../assets/images/Logo2.png" />
     </div>
-    <div class="btn-options" @click="logout"></div>
+    <div class="btn-options" id="btn-options" @click="change()">
+      <div class="bar1"></div>
+      <div class="bar2"></div>
+      <div class="bar3"></div>
+    </div>
+    <div class="options fadein" id="options">
+      <div class="option-logout" @click="logout">Logout</div>
+    </div>
+    
     <div class="main-conversations">
       <div v-for="err in errors" v-bind:key="err" class="errors">{{ err }}</div>
-      <div v-for="conversation in conversations" v-bind:key="conversation">
+      <div class="main-conversations-holder" v-for="conversation in conversations" v-bind:key="conversation">
+      
         <MessageBlob
           v-for="conv in conversation"
           v-bind:key="conv[1]"
@@ -22,7 +31,8 @@
           @click="changeConv(conv[1].id_conversation)"
           class="msg"
         ></MessageBlob>
-      </div>
+     
+    </div>
     </div>
     <div class="chat-module">
       <div class="over" id="over" v-on:scroll="handleScroll">
@@ -32,7 +42,11 @@
           class="message"
           :class="position(msg.id_user)"
         >
-          <div class="st" :id="index === messages.length - 1 ? 'last' : ''">
+          <div
+            class="st"
+            :title="date(msg.send_date)"
+            :id="index === messages.length - 1 ? 'last' : ''"
+          >
             {{ msg.message }}
           </div>
         </div>
@@ -45,7 +59,7 @@
             placeholder="Type your message here..."
             v-model="message"
           />
-          <div class="btn-send">
+          <div class="btn-send" @click="sendmessage">
             <img src="../assets/images/Logo2.png" />
           </div>
         </div>
@@ -64,6 +78,7 @@
 import MessageBlob from "../components/MessageBlob";
 import axios from "axios";
 import io from "socket.io-client";
+import moment from "moment";
 export default {
   name: "App",
   components: {
@@ -85,6 +100,11 @@ export default {
     };
   },
   methods: {
+    date: function (date) {
+      let time = Date.parse(date);
+      time -= 2 * 60 * 60 * 1000;
+      return moment(time).format("DD-MM-YYYY HH:mm:ss");
+    },
     sendmessage: function (e) {
       e.preventDefault();
 
@@ -100,6 +120,12 @@ export default {
         message: message,
       });
       this.message = "";
+    },
+    change: function () {
+      let x = document.getElementById("btn-options");
+      document.getElementById("options").classList.toggle("fadeout");
+      document.getElementById("options").classList.toggle("fadein");
+      x.classList.toggle("change");
     },
     logout: function () {
       window.localStorage.removeItem("user");
@@ -177,11 +203,8 @@ export default {
       }
     },
     handleScroll: function (event) {
-      let x = document.getElementById("over").scrollHeight;
       if (document.getElementById("over").scrollTop == 0) {
-        let y = document.getElementById("over").scrollHeight;
         document.getElementById("over").scrollTop = 1;
-        //  document.getElementById("over").scrollTop = x;
 
         const options = {
           conversation: this.conversationID,
@@ -281,6 +304,19 @@ export default {
 </script>
 
 <style scoped>
+.fadein{
+  opacity:0;
+  transition:opacity .5s ease-in;
+    -webkit-transition: opacity .5s  ease-in;
+       -moz-transition: opacity .5s  ease-in;
+         -o-transition: opacity .5s  ease-in;
+  visibility: hidden;
+}
+
+.fadeout{
+  opacity:1;
+}
+
 .bottomBar {
   display: grid;
   grid-template-columns: repeat(40, 1fr);
@@ -326,6 +362,26 @@ export default {
   border-radius: 25px;
   box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 0.625rem #ffffff;
 }
+.options {
+  margin: auto;
+  grid-column: 12;
+
+  -webkit-transition: all .3s linear 0s;
+  transition: all .3s linear 0s;
+}
+
+
+
+.option-logout {
+  cursor: pointer;
+  width: 7rem;
+  height: 3rem;
+  line-height: 3rem;
+  text-align: center;
+  border-radius: 2rem;
+  box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #ffffff;
+}
+
 .st {
   text-align: left;
   max-width: 60%;
@@ -339,6 +395,35 @@ export default {
 }
 .right {
   text-align: right;
+}
+.bar1,
+.bar2,
+.bar3 {
+  width: 35px;
+  height: 5px;
+  background-color: #333;
+  margin: 6px 0;
+  transition: 0.4s;
+}
+
+.change{
+  box-shadow: inset 6px 6px 16px #bebebe, inset -6px -6px 16px #ffffff !important;
+}
+/* Rotate first bar */
+.change .bar1 {
+  -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+  transform: rotate(-45deg) translate(-9px, 6px);
+}
+
+/* Fade out the second bar */
+.change .bar2 {
+  opacity: 0;
+}
+
+/* Rotate last bar */
+.change .bar3 {
+  -webkit-transform: rotate(45deg) translate(-8px, -8px);
+  transform: rotate(45deg) translate(-8px, -8px);
 }
 .grid {
   height: 100%;
@@ -366,6 +451,8 @@ export default {
     -0.625rem -0.625rem 1.25rem #ffffff;
 }
 .btn-options {
+  padding: 0.75rem;
+  display: inline-block;
   grid-column: 13;
   grid-row: 1;
   cursor: pointer;
@@ -392,7 +479,15 @@ export default {
 .msg {
   margin-left: 1rem;
 }
+.main-conversations-holder{
+  width:100%;
+  height:100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+}
 .main-conversations {
+  overflow: auto;
   padding: 0.5rem;
   grid-column: 1/5;
   grid-row: 2/13;
@@ -422,7 +517,13 @@ export default {
 }
 .btn-options:active,
 .btn-send:active,
-.btn-logo:active {
+.btn-logo:active,
+.option-logout:active {
   box-shadow: inset 6px 6px 16px #bebebe, inset -6px -6px 16px #ffffff;
+}
+.option-logout:hover,
+.btn-options:hover,
+.btn-logo:hover {
+  background-color: #e9e9e9;
 }
 </style>

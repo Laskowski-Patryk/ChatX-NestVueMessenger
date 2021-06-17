@@ -40,7 +40,7 @@
           {{ error }}
         </div>
 
-        <button id="but" @click="signIn">Sign In</button>
+        <button id="but" type ="submit" @click="signIn">Sign In</button>
       </form>
     </div>
   </div>
@@ -120,7 +120,7 @@ export default {
   padding: 4.75%;
   overflow: auto;
   padding-top: 2rem !important;
-  height: 27rem;
+  height:auto;
 }
 @media screen and (min-width: 1281px) {
   .center-form {
@@ -139,6 +139,7 @@ export default {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: min-content;
 }
 
 button {

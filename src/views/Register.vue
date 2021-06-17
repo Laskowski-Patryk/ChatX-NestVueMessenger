@@ -104,7 +104,7 @@
             <span v-if="index != Object.keys(errors).length - 1">, </span>
           </div>
         </div>
-        <button id="but" @click="register" :disabled="!allCheck">
+        <button id="but" type ="submit" @click="register" :disabled="!allCheck">
           Register
         </button>
       </form>
@@ -271,7 +271,7 @@ export default {
   padding: 4.75%;
   overflow: auto;
   padding-top: 2rem !important;
-  height: 51rem;
+  height: auto;
 }
 
 @media screen and (min-width: 1281px) {
@@ -291,6 +291,7 @@ export default {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: min-content;
 }
 button {
   margin: 25px 0 0 0;

@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Headers,
   Request,
@@ -17,7 +16,6 @@ export class MessageController {
 
   @Post('scrollLoad')
   public scrollLoad(@Request() req): Promise<MessageDto[]> {
-    console.log(req.body);
     return this.messageService.scrollLoad(
       req.body.conversation,
       req.body.messagesToLoad,
@@ -27,7 +25,6 @@ export class MessageController {
 
   @Post('loadAll')
   public loadAll(@Request() req, @Headers() headers): Promise<MessageDto[]> {
-    console.log(req.body);
     return this.messageService.loadAll(
       headers.user,
       req.body.messagesToLoad,

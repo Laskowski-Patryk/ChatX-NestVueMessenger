@@ -100,7 +100,7 @@ export default {
   grid-row: 1;
 }
 .conversation:hover {
-  box-shadow: inset 10px 10px 20px #bababa, inset -10px -10px 20px #ffffff;
+  /* box-shadow: inset 10px 10px 20px #bababa, inset -10px -10px 20px #ffffff; */
   cursor: pointer;
 }
 .selected{
