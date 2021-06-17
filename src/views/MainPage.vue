@@ -10,12 +10,16 @@
     </div>
     <div class="options fadein" id="options">
       <div class="option-logout" @click="logout">Logout</div>
+      <div class="option-profile">Your profile</div>
     </div>
-    
+
     <div class="main-conversations">
       <div v-for="err in errors" v-bind:key="err" class="errors">{{ err }}</div>
-      <div class="main-conversations-holder" v-for="conversation in conversations" v-bind:key="conversation">
-      
+      <div
+        class="main-conversations-holder"
+        v-for="conversation in conversations"
+        v-bind:key="conversation"
+      >
         <MessageBlob
           v-for="conv in conversation"
           v-bind:key="conv[1]"
@@ -31,11 +35,10 @@
           @click="changeConv(conv[1].id_conversation)"
           class="msg"
         ></MessageBlob>
-     
-    </div>
+      </div>
     </div>
     <div class="chat-module">
-      <div class="over" id="over" v-on:scroll="handleScroll">
+      <div class="over" id="over" v-on:scroll="messagesScroll">
         <div
           v-for="(msg, index) in messages"
           v-bind:key="msg"
@@ -159,7 +162,7 @@ export default {
       this.messages.reverse();
 
       setTimeout(() => {
-        document.getElementById("last").scrollIntoView();
+        document.getElementById("over").scrollTop = 999999;
       }, 0);
     },
     position: function (id) {
@@ -202,7 +205,7 @@ export default {
         }
       }
     },
-    handleScroll: function (event) {
+    messagesScroll: function (event) {
       if (document.getElementById("over").scrollTop == 0) {
         document.getElementById("over").scrollTop = 1;
 
@@ -240,7 +243,7 @@ export default {
     const options = {
       messagesToLoad: this.messagesToLoad,
       conversationsToLoad: this.conversationsToLoad,
-      alreadyLoaded: this.messages.length,
+      alreadyLoaded: this.conversations.length,
     };
     axios
       .post("message/loadAll", options)
@@ -283,9 +286,6 @@ export default {
       });
 
     this.socket = io("http://localhost:3001");
-    this.socket.on("connect", () => {
-      console.log(this.socket.id);
-    });
 
     this.socket.on("msgToClient", (msg) => {
       this.receiveChatMessage(msg);
@@ -304,17 +304,20 @@ export default {
 </script>
 
 <style scoped>
-.fadein{
-  opacity:0;
-  transition:opacity .5s ease-in;
-    -webkit-transition: opacity .5s  ease-in;
-       -moz-transition: opacity .5s  ease-in;
-         -o-transition: opacity .5s  ease-in;
+.fadein {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+  -webkit-transition: opacity 0.5s ease-in;
+  -moz-transition: opacity 0.5s ease-in;
+  -o-transition: opacity 0.5s ease-in;
   visibility: hidden;
+
+  -webkit-transform: translate(2rem, 0);
+  transform: translate(2rem, 0);
 }
 
-.fadeout{
-  opacity:1;
+.fadeout {
+  opacity: 1;
 }
 
 .bottomBar {
@@ -322,12 +325,14 @@ export default {
   grid-template-columns: repeat(40, 1fr);
   margin-bottom: 1.3rem;
 }
+
 .btn-send > img {
   max-width: 2rem;
   max-height: 2rem;
   margin-top: 0.5rem;
   margin-left: 0.75rem;
 }
+
 .btn-send {
   cursor: pointer;
   grid-column: 39;
@@ -338,8 +343,9 @@ export default {
   height: 3rem;
   border-radius: 2rem;
   background: linear-gradient(145deg, #f0f0f0, #cacaca);
-  box-shadow: 10px 10px 20px #aaaaaa, -10px -10px 20px #ffffff;
+  box-shadow: 10px 10px 20px #aaa, -10px -10px 20px #fff;
 }
+
 .textBar {
   grid-column: 2/39;
   grid-row: 1;
@@ -347,41 +353,54 @@ export default {
   height: 3rem !important;
   padding-left: 45px;
   font-size: 18px;
-  outline: none;
-  border: none;
+  outline: 0;
+  border: 0;
   color: #595959;
   background: #dde1e7;
   border-radius: 25px;
-  box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 0.625rem #ffffff;
+  box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 0.625rem #fff;
 }
+
 .textBar:focus {
-  outline: none;
-  border: none;
+  outline: 0;
+  border: 0;
   color: #595959;
   background: #dde1e7;
   border-radius: 25px;
-  box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 0.625rem #ffffff;
+  box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 0.625rem #fff;
 }
+
 .options {
-  margin: auto;
-  grid-column: 12;
-
-  -webkit-transition: all .3s linear 0s;
-  transition: all .3s linear 0s;
+  display: flex;
+  flex-direction: row-reverse;
+  grid-column: 5/13;
+  -webkit-transition: all 0.3s linear 0s;
+  transition: all 0.3s linear 0s;
 }
-
-
+.options > div {
+  margin-top: 0.4rem;
+  margin-left: 2rem;
+}
 
 .option-logout {
+  
   cursor: pointer;
   width: 7rem;
   height: 3rem;
   line-height: 3rem;
   text-align: center;
   border-radius: 2rem;
-  box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #ffffff;
+  box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #fff;
 }
-
+.option-profile {
+  cursor: pointer;
+  width: 7rem;
+  height: 3rem;
+  line-height: 3rem;
+  text-align: center;
+  border-radius: 2rem;
+  box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #fff;
+}
 .st {
   text-align: left;
   max-width: 60%;
@@ -389,13 +408,16 @@ export default {
   position: relative;
   padding: 0.7rem;
   margin-top: 1rem;
-  box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #ffffff;
+  box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #fff;
   display: inline-block;
   overflow: hidden;
+  overflow-wrap: break-word;
 }
+
 .right {
   text-align: right;
 }
+
 .bar1,
 .bar2,
 .bar3 {
@@ -406,25 +428,24 @@ export default {
   transition: 0.4s;
 }
 
-.change{
-  box-shadow: inset 6px 6px 16px #bebebe, inset -6px -6px 16px #ffffff !important;
+.change {
+  box-shadow: inset 6px 6px 16px #bebebe, inset -6px -6px 16px #fff !important;
 }
-/* Rotate first bar */
+
 .change .bar1 {
   -webkit-transform: rotate(-45deg) translate(-9px, 6px);
   transform: rotate(-45deg) translate(-9px, 6px);
 }
 
-/* Fade out the second bar */
 .change .bar2 {
   opacity: 0;
 }
 
-/* Rotate last bar */
 .change .bar3 {
   -webkit-transform: rotate(45deg) translate(-8px, -8px);
   transform: rotate(45deg) translate(-8px, -8px);
 }
+
 .grid {
   height: 100%;
   padding: 2.5rem;
@@ -436,20 +457,21 @@ export default {
   grid-template-rows: repeat(12, 1fr);
   row-gap: 2rem;
 }
+
 .btn-logo {
   grid-column: 1;
   grid-row: 1;
   cursor: pointer;
   background-color: #e0e0e0;
-
   min-width: 60px;
   min-height: 60px;
   max-width: 2rem;
   max-height: 2rem;
   border-radius: 2vh;
   box-shadow: 0.625rem 0.625rem 1.25rem #bababa,
-    -0.625rem -0.625rem 1.25rem #ffffff;
+    -0.625rem -0.625rem 1.25rem #fff;
 }
+
 .btn-options {
   padding: 0.75rem;
   display: inline-block;
@@ -462,7 +484,7 @@ export default {
   max-width: 3%;
   max-height: 3%;
   border-radius: 2vh;
-  box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #ffffff;
+  box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #fff;
 }
 
 .logo-image {
@@ -476,16 +498,18 @@ export default {
   -o-user-drag: none;
   -webkit-user-drag: none;
 }
+
 .msg {
   margin-left: 1rem;
 }
-.main-conversations-holder{
-  width:100%;
-  height:100%;
+
+.main-conversations-holder {
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-
 }
+
 .main-conversations {
   overflow: auto;
   padding: 0.5rem;
@@ -494,14 +518,16 @@ export default {
   border-radius: 3.125rem;
   background: #e0e0e0;
   box-shadow: inset 0.625rem 0.625rem 1.25rem #bababa,
-    inset -0.625rem -0.625rem 1.25rem #ffffff;
+    inset -0.625rem -0.625rem 1.25rem #fff;
 }
+
 .over {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 2rem;
   padding-bottom: 1rem;
 }
+
 .chat-module {
   display: flex;
   justify-content: flex-end;
@@ -509,19 +535,20 @@ export default {
   overflow: auto;
   grid-column: 5/14;
   grid-row: 2/13;
-
   border-radius: 3.125rem;
   background: #e0e0e0;
   box-shadow: inset 0.625rem 0.625rem 1.25rem #bababa,
-    inset -0.625rem -0.625rem 1.25rem #ffffff;
+    inset -0.625rem -0.625rem 1.25rem #fff;
 }
+
 .btn-options:active,
 .btn-send:active,
 .btn-logo:active,
-.option-logout:active {
-  box-shadow: inset 6px 6px 16px #bebebe, inset -6px -6px 16px #ffffff;
+.options > div:active {
+  box-shadow: inset 6px 6px 16px #bebebe, inset -6px -6px 16px #fff;
 }
-.option-logout:hover,
+
+.options > div:hover,
 .btn-options:hover,
 .btn-logo:hover {
   background-color: #e9e9e9;
