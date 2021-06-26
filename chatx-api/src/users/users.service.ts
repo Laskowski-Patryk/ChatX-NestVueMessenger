@@ -26,7 +26,6 @@ export class UsersService {
       map((users: UserDto[]) => {
         users.forEach(function (v) {
           v.password = undefined;
-          v.private_key = undefined;
         });
         return users;
       }),
@@ -47,8 +46,6 @@ export class UsersService {
         usr.email = newUser.email;
         usr.city = newUser.city;
         usr.avatar = newUser.avatar;
-        usr.private_key = randomHash(20, 0);
-        usr.public_key = randomHash(20, 0);
         usr.surname = capitalizeFirstLetter(newUser.surname);
         usr.password = passwordHash;
         usr.password_reset = false;

@@ -12,8 +12,6 @@ export class UserDto {
   @IsNotEmpty() @IsAlphanumeric() @MaxLength(40) surname: string;
   @IsNotEmpty() @IsAlphanumeric() city: string;
   avatar?: string;
-  public_key?: string;
-  private_key?: string;
   created_at?: any;
   password_reset?: boolean;
 }
