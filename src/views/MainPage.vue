@@ -78,7 +78,7 @@
 </template>
  
 <script>
-import MessageBlob from "../components/MessageBlob";
+import MessageBlob from "../components/MessageBlob.vue";
 import axios from "axios";
 import io from "socket.io-client";
 import moment from "moment";
@@ -111,7 +111,7 @@ export default {
     sendmessage: function (e) {
       e.preventDefault();
 
-      if (message == "") return;
+      if (this.message == "") return;
       let message = {
         msg: this.message,
         user: this.userID,
@@ -126,13 +126,14 @@ export default {
     },
     change: function () {
       let x = document.getElementById("btn-options");
+
       document.getElementById("options").classList.toggle("fadeout");
       document.getElementById("options").classList.toggle("fadein");
       x.classList.toggle("change");
     },
     logout: function () {
       window.localStorage.removeItem("user");
-      this.$router.go();
+      this.$router.go(0);
     },
     changeConv: function (id) {
       this.conversationID = id;
