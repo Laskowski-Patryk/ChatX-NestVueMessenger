@@ -29,7 +29,7 @@ export class AuthService {
     const user = await this.usersService.getUserByUsername(username);
     if (user && await this.comparePasswords(password, user.password)) {
       
-      const {password,private_key, ...all } = user;
+      const {password, ...all } = user;
 
       return all;
     }
