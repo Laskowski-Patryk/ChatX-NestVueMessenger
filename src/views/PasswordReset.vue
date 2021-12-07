@@ -8,7 +8,6 @@
         >Enter your user account's verified email address and we will send you a
         password reset link.</label
       >
-      <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
           <input
@@ -32,7 +31,7 @@
         </div>
 
         <button id="but" @click="resetPassword" data-badge="inline">
-          Sign In
+          Reset Password
         </button>
       </form>
     </div>

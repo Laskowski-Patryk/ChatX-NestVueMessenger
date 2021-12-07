@@ -7,6 +7,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   
   await app.listen(3000);
+
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());

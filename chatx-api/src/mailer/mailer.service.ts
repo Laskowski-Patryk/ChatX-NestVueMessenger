@@ -93,6 +93,8 @@ export class MailerService {
         user: process.env.EMAIL_USERNAME, // generated ethereal user
         pass: process.env.EMAIL_PASSWORD, // generated ethereal password
       },
+
+      
     });
 
     const payload = { name: user.name, sub: user._id };
