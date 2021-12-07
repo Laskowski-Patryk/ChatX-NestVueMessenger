@@ -159,7 +159,7 @@ export default {
           .catch((error) => {
             console.log(error);
           });
-      }
+      } 
       this.messages.reverse();
 
       setTimeout(() => {

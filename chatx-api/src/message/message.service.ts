@@ -76,7 +76,7 @@ export class MessageService {
     if (!messages || !messages[0])
       throw new HttpException('No more messages to load', 400);
     return messages;
-  }
+  } 
 
   public async send(msg: string, user: any, user2: UserDto): Promise<object> {
     let idConv;

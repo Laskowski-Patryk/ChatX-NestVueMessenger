@@ -22,7 +22,7 @@ export class MessageController {
       req.body.alreadyLoaded,
     ); // (req.user, ile zaladowac, ile już załadowanych)
   }
-
+ 
   @Post('loadAll')
   public loadAll(@Request() req, @Headers() headers): Promise<MessageDto[]> {
     return this.messageService.loadAll(
