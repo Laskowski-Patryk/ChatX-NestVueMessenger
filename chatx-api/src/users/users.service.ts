@@ -50,7 +50,6 @@ export class UsersService {
         usr.password = passwordHash;
         usr.password_reset = false;
         usr.created_at = Date.now() + 2 * 60 * 60 * 1000;
-
         const user = new this.userModel(usr);
 
         return from(
@@ -65,12 +64,12 @@ export class UsersService {
         ).pipe(
           map((user: UserDto) => {
             this.mailerService.verifyEmail(user).catch(console.error);
-
+            
             return {
               msg: 'Successfully registered. Check your email to verify.',
             };
           }),
-
+          
           catchError((e) => throwError(e)),
         );
       }),

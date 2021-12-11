@@ -72,12 +72,18 @@ export default {
   grid-row: 2;
   font-size: 0.7rem;
   margin-right: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .name {
   margin-top: 10px;
   grid-column: 2/6;
   grid-row: 1;
   font-size: 1.1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .lastMessage {
   grid-column: 2/7;

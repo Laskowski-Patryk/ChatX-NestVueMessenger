@@ -127,6 +127,7 @@ export default {
         email: "",
         password: "",
         password2: "",
+        public_key: "sadczx2",
         terms: false,
       },
     };
