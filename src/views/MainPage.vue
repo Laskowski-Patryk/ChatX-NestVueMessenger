@@ -76,12 +76,13 @@
     </div>
   </div>
 </template>
- 
+
 <script>
 import MessageBlob from "../components/MessageBlob.vue";
 import axios from "axios";
 import io from "socket.io-client";
 import moment from "moment";
+import $ from 'jquery';
 export default {
   name: "App",
   components: {
@@ -103,12 +104,13 @@ export default {
     };
   },
   methods: {
-    date: function (date) {
+    date: function(date) {
+      
       let time = Date.parse(date);
       time -= 2 * 60 * 60 * 1000;
       return moment(time).format("DD-MM-YYYY HH:mm:ss");
     },
-    sendmessage: function (e) {
+    sendmessage: function(e) {
       e.preventDefault();
 
       if (this.message == "") return;
@@ -124,18 +126,18 @@ export default {
       });
       this.message = "";
     },
-    change: function () {
+    change: function() {
       let x = document.getElementById("btn-options");
 
       document.getElementById("options").classList.toggle("fadeout");
       document.getElementById("options").classList.toggle("fadein");
       x.classList.toggle("change");
     },
-    logout: function () {
+    logout: function() {
       window.localStorage.removeItem("user");
       this.$router.go(0);
     },
-    changeConv: function (id) {
+    changeConv: function(id) {
       this.conversationID = id;
       this.messages = [];
       for (let i = 0; i < this.conversations[0].length; i++) {
@@ -159,14 +161,14 @@ export default {
           .catch((error) => {
             console.log(error);
           });
-      } 
+      }
       this.messages.reverse();
 
       setTimeout(() => {
         document.getElementById("over").scrollTop = 999999;
       }, 0);
     },
-    position: function (id) {
+    position: function(id) {
       if (id == this.userID) return "right";
       return "left";
     },
@@ -206,7 +208,7 @@ export default {
         }
       }
     },
-    messagesScroll: function (event) {
+    messagesScroll: function(event) {
       if (document.getElementById("over").scrollTop == 0) {
         document.getElementById("over").scrollTop = 1;
 
@@ -241,7 +243,8 @@ export default {
   },
   beforeCreate() {},
 
-  created: function () {
+  created: function() {
+    
     function expmod(base, exp, mod) {
       if (exp == 0) return 1;
       if (exp % 2 == 0) {

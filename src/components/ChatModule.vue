@@ -2,9 +2,9 @@
   <div class="chat-default">
   </div>
 </template>
+ 
 
-
-
+ 
 <script>
 export default {
   name: "App",

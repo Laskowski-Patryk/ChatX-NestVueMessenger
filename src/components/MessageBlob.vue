@@ -13,12 +13,10 @@
   </div>
 </template>
 
-
-
 <script>
 import moment from "moment";
 export default {
-  props: ["name", "surname", "message", "seen", "date", "id","sel"],
+  props: ["name", "surname", "message", "seen", "date", "id", "sel"],
   data() {
     return {
       name1: "",
@@ -43,24 +41,21 @@ export default {
     this.date1 = moment(time).format("DD-MM-YYYY HH:mm");
   },
   watch: {
-    seen: function () {
+    seen: function() {
       this.seen1 = this.seen;
     },
-    message: function () {
+    message: function() {
       this.message1 = this.message;
     },
-    convID: function () {
+    convID: function() {
       this.convID1 = this.convID;
     },
-    selectedID: function () {
+    selectedID: function() {
       this.selectedID1 = this.selectedID;
     },
   },
 };
 </script>
-
-
-
 
 <style scoped>
 .bold {
@@ -109,7 +104,7 @@ export default {
   /* box-shadow: inset 10px 10px 20px #bababa, inset -10px -10px 20px #ffffff; */
   cursor: pointer;
 }
-.selected{
+.selected {
   box-shadow: inset 10px 10px 20px #bababa, inset -10px -10px 20px #ffffff !important;
 }
 .conversation {

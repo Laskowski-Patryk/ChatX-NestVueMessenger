@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jquery": "^3.6.0",
     "mdb-vue-ui-kit": "^1.0.0-beta6",
     "mdbootstrap": "^4.19.2",
     "mdbvue": "^6.7.2",
