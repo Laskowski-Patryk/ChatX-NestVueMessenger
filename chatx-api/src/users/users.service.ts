@@ -21,13 +21,26 @@ export class UsersService {
     return from<string>(bcrypt.hash(password, 12));
   }
 
-  public getUsers(): Observable<UserDto[]> {
-    return from(this.userModel.find()).pipe(
+  public getUsers(text): Observable<UserDto[]> {
+    return from(
+      this.userModel.find({
+        $expr: {
+          $regexMatch: {
+            input: { $concat: ['$name', ' ', '$surname'] },
+            regex: text,
+            options: 'i',
+          },
+        },
+      }),
+    ).pipe(
       map((users: UserDto[]) => {
+        let usrs = [];
         users.forEach(function (v) {
-          v.password = undefined;
+          let usr = { name: v.name, surname: v.surname, city: v.city };
+          usrs.push(usr);
         });
-        return users;
+
+        return usrs;
       }),
     );
   }
@@ -64,12 +77,12 @@ export class UsersService {
         ).pipe(
           map((user: UserDto) => {
             this.mailerService.verifyEmail(user).catch(console.error);
-            
+
             return {
               msg: 'Successfully registered. Check your email to verify.',
             };
           }),
-          
+
           catchError((e) => throwError(e)),
         );
       }),
@@ -118,6 +131,20 @@ export class UsersService {
   ): Promise<UserDto> {
     const user = await this.userModel
       .findOneAndUpdate({ _id: id }, { [propertyName]: propertyValue })
+      .exec();
+    if (!user) {
+      throw new HttpException('Not Found', 404);
+    }
+    let x = { ...user }; // @ts-ignore: Unreachable code error
+    return x._doc;
+  }
+
+  public async updateUser(
+    id: string,
+    user: UserDto,
+  ): Promise<UserDto> {
+    const usr = await this.userModel
+      .findOneAndUpdate({ _id: id }, user)
       .exec();
     if (!user) {
       throw new HttpException('Not Found', 404);

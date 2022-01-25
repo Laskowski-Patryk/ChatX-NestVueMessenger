@@ -5,6 +5,7 @@ import MainPage from "@/views/MainPage.vue";
 import PasswordReset from "@/views/PasswordReset.vue";
 import RecoverPassword from "@/views/RecoverPassword.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
+import Profile from "@/views/Profile.vue";
 import axios from '../axios';
 
 const routes = [
@@ -12,6 +13,14 @@ const routes = [
     path: "/",
     name: "MainPage",
     component: MainPage,
+    beforeEnter: (to: any, from: any, next: any) => {
+      guard(to, from, next);
+    },
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
     beforeEnter: (to: any, from: any, next: any) => {
       guard(to, from, next);
     },

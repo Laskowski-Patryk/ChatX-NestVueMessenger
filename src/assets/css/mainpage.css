@@ -141,6 +141,20 @@
     -0.625rem -0.625rem 1.25rem #fff;
 }
 
+.btn-search {
+  grid-column: 2;
+  grid-row: 1;
+  cursor: pointer;
+  background-color: #e0e0e0;
+  min-width: 60px;
+  min-height: 60px;
+  max-width: 2rem;
+  max-height: 2rem;
+  border-radius: 20%;
+  box-shadow: 0.625rem 0.625rem 1.25rem #bababa,
+    -0.625rem -0.625rem 1.25rem #fff;
+}
+
 .btn-options {
   padding: 0.75rem;
   display: inline-block;
@@ -156,7 +170,7 @@
   box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #fff;
 }
 
-.logo-image {
+.logo-image ,.search-image{
   width: 80%;
   height: 80%;
   margin-top: 12%;
@@ -167,11 +181,15 @@
   -o-user-drag: none;
   -webkit-user-drag: none;
 }
-
+.search-image{
+  margin-left:11%;
+}
 .msg {
   margin-left: 1rem;
 }
-
+.search-toggle{
+  height:100%;
+}
 .main-conversations-holder {
   width: 100%;
   height: 100%;
@@ -213,12 +231,14 @@
 .btn-options:active,
 .btn-send:active,
 .btn-logo:active,
+.btn-search:active,
 .options > div:active {
   box-shadow: inset 6px 6px 16px #bebebe, inset -6px -6px 16px #fff;
 }
 
 .options > div:hover,
 .btn-options:hover,
+.btn-search:hover,
 .btn-logo:hover {
   background-color: #e9e9e9;
 }

@@ -13,5 +13,7 @@ export class UserDto {
   @IsNotEmpty() @IsAlphanumeric() city: string;
   avatar?: string;
   created_at?: any;
+  private_key: string;
+  public_key: string;
   password_reset?: boolean;
 }

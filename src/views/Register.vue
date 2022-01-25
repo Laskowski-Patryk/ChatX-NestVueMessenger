@@ -140,7 +140,7 @@ export default {
       if (this.usernameCheck == "wrong") return;
       if (this.passwordCheck == "wrong") return;
       if (this.password2Check == "wrong") return;
-      if (this.usernameCheck == "wrong") return;
+      if (this.surnameCheck == "wrong") return;
       if (this.nameCheck == "wrong") return;
       if (this.cityCheck == "wrong") return;
       if (this.checkboxCheck == "wrong") return;

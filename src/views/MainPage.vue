@@ -3,6 +3,9 @@
     <div class="btn-logo">
       <img class="logo-image" src="../assets/images/Logo2.png" />
     </div>
+    <div @click="search = !search" class="btn-search">
+      <img class="search-image" src="../assets/images/search-image.png" />
+    </div>
     <div class="btn-options" id="btn-options" @click="change()">
       <div class="bar1"></div>
       <div class="bar2"></div>
@@ -10,31 +13,46 @@
     </div>
     <div class="options fadein" id="options">
       <div class="option-logout" @click="logout">Logout</div>
-      <div class="option-profile">Your profile</div>
+      <div class="option-profile" @click="profile">Your profile</div>
     </div>
-
     <div class="main-conversations">
       <div v-for="err in errors" v-bind:key="err" class="errors">{{ err }}</div>
-      <div
-        class="main-conversations-holder"
-        v-for="conversation in conversations"
-        v-bind:key="conversation"
-      >
-        <MessageBlob
-          v-for="conv in conversation"
-          v-bind:key="conv[1]"
-          :name="conv[0].name"
-          :surname="conv[0].surname"
-          :message="conv[1].message"
-          :date="conv[1].send_date"
-          :seen="conv[1].seen"
-          :id="conv[1].id_user"
-          :sel="
-            conv[1].id_conversation == conversationID ? 'selected' : 'normal'
-          "
-          @click="changeConv(conv[1].id_conversation)"
-          class="msg"
-        ></MessageBlob>
+      <div v-if="!search" class="search-toggle">
+        <div
+          class="main-conversations-holder"
+          v-for="conversation in conversations"
+          v-bind:key="conversation"
+        >
+          <MessageBlob
+            v-for="conv in conversation"
+            v-bind:key="conv[1]"
+            :name="conv[0].name"
+            :surname="conv[0].surname"
+            :avatar="conv[0].avatar"
+            :message="conv[1].message"
+            :date="conv[1].send_date"
+            :seen="conv[1].seen"
+            :id="conv[1].id_user"
+            :sel="
+              conv[1].id_conversation == conversationID ? 'selected' : 'normal'
+            "
+            
+            @click="changeConv(conv[1].id_conversation)"
+            class="msg"
+          ></MessageBlob>
+        </div>
+      </div>
+      <div v-if="search" class="search">
+        <div style="margin-left:5%;margin-right:5%;margin-top:5%;">
+          <input
+            type="text"
+            class="textBar form-control"
+            id="searchBar"
+            placeholder="Looking for someone?"
+            @keyup="findPeople()"
+            v-model="searchArea"
+          />
+        </div>
       </div>
     </div>
     <div class="chat-module">
@@ -82,7 +100,7 @@ import MessageBlob from "../components/MessageBlob.vue";
 import axios from "axios";
 import io from "socket.io-client";
 import moment from "moment";
-import $ from 'jquery';
+import $ from "jquery";
 export default {
   name: "App",
   components: {
@@ -90,6 +108,7 @@ export default {
   },
   data() {
     return {
+      search: 0,
       errors: [],
       userID: window.localStorage.getItem("userid"),
       conversations: [],
@@ -101,11 +120,11 @@ export default {
       scrollTop: null,
       conversationsToLoad: 6,
       messagesToLoad: 12,
+      searchArea: "",
     };
   },
   methods: {
     date: function(date) {
-      
       let time = Date.parse(date);
       time -= 2 * 60 * 60 * 1000;
       return moment(time).format("DD-MM-YYYY HH:mm:ss");
@@ -136,6 +155,20 @@ export default {
     logout: function() {
       window.localStorage.removeItem("user");
       this.$router.go(0);
+    },
+    profile: function() {
+      this.$router.push("/profile");
+    },
+    buttonPress: function(el) {
+      var timeout = null;
+
+      $("#searchBar").keyup(function() {
+        clearTimeout(timeout);
+
+        timeout = setTimeout(function() {
+          console.log("juz");
+        }, 500);
+      });
     },
     changeConv: function(id) {
       this.conversationID = id;
@@ -171,6 +204,18 @@ export default {
     position: function(id) {
       if (id == this.userID) return "right";
       return "left";
+    },
+    findPeople: function() {
+      if (this.searchArea != "" && this.searchArea.match(/\S/g).length > 3) {
+        axios
+          .post("/getProfile", { text: this.searchArea })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     receiveChatMessage(msg) {
       if (msg.id_conversation == this.conversationID) {
@@ -244,7 +289,6 @@ export default {
   beforeCreate() {},
 
   created: function() {
-    
     function expmod(base, exp, mod) {
       if (exp == 0) return 1;
       if (exp % 2 == 0) {
@@ -273,7 +317,7 @@ export default {
             return 1;
           } else return -1;
         });
-
+      console.log(res)
         this.conversations.push(res.data.reverse());
         res.data[0].forEach((element) => {
           if (i == 0) this.activeUser = element.id;

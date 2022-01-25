@@ -1,8 +1,10 @@
 <template>
   <div class="blob">
     <div class="conversation" :class="sel">
+      
       <div class="avatar">
-        <img src="../assets/images/simple-avatar.png" />
+        <img v-if="!avatar" class= "default-picture" src="../assets/images/simple-avatar.png" />
+        <img v-if="avatar" :src="avatar" class="profile-picture"/>
       </div>
       <div class="name">{{ name1 }} {{ surname1 }}</div>
       <div class="date">{{ date1 }}</div>
@@ -16,7 +18,7 @@
 <script>
 import moment from "moment";
 export default {
-  props: ["name", "surname", "message", "seen", "date", "id", "sel"],
+  props: ["name", "surname", "message", "seen", "date", "id", "sel","avatar"],
   data() {
     return {
       name1: "",
@@ -122,9 +124,24 @@ export default {
   grid-template-columns: repeat(2, 80px);
   grid-auto-rows: minmax(2rem, auto);
 }
-.avatar > img {
+.default-picture {
   width: 70%;
   height: 70%;
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.profile-picture {
+  width: 100%;
+  height: 100%;
 
   display: block;
   margin-left: auto;

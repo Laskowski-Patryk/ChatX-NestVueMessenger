@@ -33,8 +33,8 @@ export class MessageService {
       let uID = conv.id_users.user2;
       if (conv.id_users.user != id_user) uID = conv.id_users.user;
       const user = await this.userService.getUserById(uID.toString());// @ts-ignore: Unreachable code error
-
-      const nameSurname = {name: user.name, surname: user.surname, id:user._id};
+      const nameSurname = {name: user.name, surname: user.surname, id:user._id, avatar:user.avatar};
+      
       let message;
      
       message = (await this.messageModel
@@ -79,6 +79,9 @@ export class MessageService {
   } 
 
   public async send(msg: string, user: any, user2: UserDto): Promise<object> {
+    
+    if(user.id)user = user.id;
+
     let idConv;
     const mes = new MessageDto();
     const message = new this.messageModel(mes);
