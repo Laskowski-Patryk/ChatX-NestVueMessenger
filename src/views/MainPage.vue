@@ -1,6 +1,12 @@
 <template>
   <div class="grid">
-    <div class="btn-logo">
+    <div
+      @click="
+        search = 0;
+        searchSelect = '';
+      "
+      class="btn-logo"
+    >
       <img class="logo-image" src="../assets/images/Logo2.png" />
     </div>
     <div @click="search = !search" class="btn-search">
@@ -36,7 +42,6 @@
             :sel="
               conv[1].id_conversation == conversationID ? 'selected' : 'normal'
             "
-            
             @click="changeConv(conv[1].id_conversation)"
             class="msg"
           ></MessageBlob>
@@ -53,10 +58,26 @@
             v-model="searchArea"
           />
         </div>
+        <PersonBlob
+          v-for="person in searchResult"
+          v-bind:key="person.id"
+          :name="person.name"
+          :surname="person.surname"
+          :city="person.city"
+          :avatar="person.avatar"
+          :sel="person.id == searchSelect ? 'selected' : 'normal'"
+          @click="firstMessage(person.id)"
+          class="msg"
+        ></PersonBlob>
       </div>
     </div>
     <div class="chat-module">
-      <div class="over" id="over" v-on:scroll="messagesScroll">
+      <div
+        v-if="!searchSelect"
+        class="over"
+        id="over"
+        v-on:scroll="messagesScroll"
+      >
         <div
           v-for="(msg, index) in messages"
           v-bind:key="msg"
@@ -97,6 +118,7 @@
 
 <script>
 import MessageBlob from "../components/MessageBlob.vue";
+import PersonBlob from "../components/PersonBlob.vue";
 import axios from "axios";
 import io from "socket.io-client";
 import moment from "moment";
@@ -105,6 +127,7 @@ export default {
   name: "App",
   components: {
     MessageBlob,
+    PersonBlob,
   },
   data() {
     return {
@@ -121,9 +144,15 @@ export default {
       conversationsToLoad: 6,
       messagesToLoad: 12,
       searchArea: "",
+      searchResult: [],
+      searchSelect: 0,
     };
   },
   methods: {
+    firstMessage: function(personID) {
+      this.searchSelect = personID;
+      this.activeUser = personID;
+    },
     date: function(date) {
       let time = Date.parse(date);
       time -= 2 * 60 * 60 * 1000;
@@ -144,6 +173,14 @@ export default {
         message: message,
       });
       this.message = "";
+      if (this.searchSelect) {
+        this.socket.emit("msgToServer", {
+          sender: this.userID,
+          room: "global",
+          message: this.searchSelect,
+        });
+        this.$router.go(0);
+      }
     },
     change: function() {
       let x = document.getElementById("btn-options");
@@ -165,13 +202,12 @@ export default {
       $("#searchBar").keyup(function() {
         clearTimeout(timeout);
 
-        timeout = setTimeout(function() {
-          console.log("juz");
-        }, 500);
+        timeout = setTimeout(function() {}, 500);
       });
     },
     changeConv: function(id) {
       this.conversationID = id;
+      this.searchSelect = "";
       this.messages = [];
       for (let i = 0; i < this.conversations[0].length; i++) {
         for (let j = 1; j < this.conversations[0][i].length; j++) {
@@ -206,19 +242,37 @@ export default {
       return "left";
     },
     findPeople: function() {
-      if (this.searchArea != "" && this.searchArea.match(/\S/g).length > 3) {
+      if (this.searchArea != "" && this.searchArea.match(/\S/g).length > 2) {
         axios
           .post("/getProfile", { text: this.searchArea })
           .then((res) => {
-            console.log(res);
+            this.searchResult = [];
+            if(this.conversations.length > 0){
+            res.data.forEach((el) => {
+              let add = 1;
+              for (let i = 0; i < this.conversations[0].length; i++) {
+                if (this.conversations[0][i][0].id == el.id) add = 0;
+                console.log(this.conversations[0][i][0].id, el.id);
+              }
+              if (el.id != this.userID && add == 1) this.searchResult.push(el);
+            });
+            }else{
+              this.searchResult = res.data;
+            }
           })
           .catch((error) => {
             console.log(error);
           });
+      }else{
+        this.searchResult = [];
       }
     },
     receiveChatMessage(msg) {
-      if (msg.id_conversation == this.conversationID) {
+      if(msg == this.userID){
+        this.$router.go(0);
+      }
+      
+      if (msg.id_conversation && msg.id_conversation == this.conversationID) {
         this.messages.push(msg);
         setTimeout(() => {
           document.getElementById("last").scrollIntoView();
@@ -301,7 +355,6 @@ export default {
     let mod = 12;
     let n = 3;
 
-    console.log(expmod(g, n, mod));
     this.messagesToLoad = Math.floor(window.innerHeight / 60);
     const options = {
       messagesToLoad: this.messagesToLoad,
@@ -317,7 +370,6 @@ export default {
             return 1;
           } else return -1;
         });
-      console.log(res)
         this.conversations.push(res.data.reverse());
         res.data[0].forEach((element) => {
           if (i == 0) this.activeUser = element.id;
@@ -345,7 +397,7 @@ export default {
         }, 0);
       })
       .catch((error) => {
-        this.errors.push(error.response.data.message);
+        // this.errors.push(error.response.data.message);
       });
 
     this.socket = io("http://localhost:3001");
@@ -353,6 +405,8 @@ export default {
     this.socket.on("msgToClient", (msg) => {
       this.receiveChatMessage(msg);
     });
+
+    this.socket.emit("joinRoom", "global");
 
     axios
       .get("conversation/getAll")

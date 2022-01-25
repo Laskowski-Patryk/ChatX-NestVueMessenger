@@ -25,12 +25,15 @@ export class AppGateway
     client: Socket,
     message: any,
   ):Promise<any> {
-    
-    let x = await this.messageService.send(
+    let x;
+    if(message.message) x = message.message;
+    if(message.room != "global"){
+    x = await this.messageService.send(
       message.message.msg,
       message.message.user,
       message.message.user2,
     );
+    }
     this.wss.to(message.room).emit('msgToClient', x);
   }
 

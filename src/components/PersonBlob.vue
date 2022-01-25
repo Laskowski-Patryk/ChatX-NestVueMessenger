@@ -6,8 +6,8 @@
         <img v-if="!avatar" class= "default-picture" src="../assets/images/simple-avatar.png" />
         <img v-if="avatar" :src="avatar" class="profile-picture"/>
       </div>
-      <div class="name">{{ name1 }} {{ surname1 }}</div>
-      <div class="date">{{ date1 }}</div>
+      <div class="name">{{ name }} {{ surname }}</div>
+      <div class="city">{{ city }}</div>
       <div class="lastMessage" :class="seen1 == false ? 'bold' : 'normal'">
         {{ message1 }}
       </div>
@@ -16,45 +16,11 @@
 </template>
 
 <script>
-import moment from "moment";
 export default {
-  props: ["name", "surname", "message", "seen", "date", "id", "sel","avatar"],
+  props: ["name", "surname", "city","avatar","sel"],
   data() {
     return {
-      name1: "",
-      surname1: "",
-      message1: "",
-      seen1: "",
-      date1: "",
     };
-  },
-
-  mounted() {
-    this.name1 = this.name;
-    this.surname1 = this.surname;
-    this.message1 = this.message;
-    if (window.localStorage.getItem("userid") == this.id) {
-      this.seen1 = true;
-    } else {
-      this.seen1 = this.seen;
-    }
-    let time = Date.parse(this.date);
-    time -= 2 * 60 * 60 * 1000;
-    this.date1 = moment(time).format("DD-MM-YYYY HH:mm");
-  },
-  watch: {
-    seen: function() {
-      this.seen1 = this.seen;
-    },
-    message: function() {
-      this.message1 = this.message;
-    },
-    convID: function() {
-      this.convID1 = this.convID;
-    },
-    selectedID: function() {
-      this.selectedID1 = this.selectedID;
-    },
   },
 };
 </script>
@@ -64,10 +30,10 @@ export default {
   font-weight: 800;
   opacity: 1;
 }
-.date {
-  grid-column: 7/8;
+.city {
+  grid-column: 2/5;
   grid-row: 2;
-  font-size: 0.7rem;
+  font-size: 1rem;
   margin-right: 1rem;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -77,7 +43,7 @@ export default {
   margin-top: 10px;
   grid-column: 2/6;
   grid-row: 1;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;

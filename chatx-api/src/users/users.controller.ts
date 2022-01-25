@@ -19,7 +19,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Post('getProfile')
   public getUsers(@Body() body) {
-    console.log(body.text)
+    console.log(body)
     return this.userService.getUsers(body.text);
   }
 

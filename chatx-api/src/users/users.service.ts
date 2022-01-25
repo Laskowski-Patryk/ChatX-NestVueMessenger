@@ -36,7 +36,7 @@ export class UsersService {
       map((users: UserDto[]) => {
         let usrs = [];
         users.forEach(function (v) {
-          let usr = { name: v.name, surname: v.surname, city: v.city };
+          let usr = { name: v.name, surname: v.surname, city: v.city , id: v._id, avatar: v.avatar};
           usrs.push(usr);
         });
 
