@@ -19,7 +19,6 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Post('getProfile')
   public getUsers(@Body() body) {
-    console.log(body)
     return this.userService.getUsers(body.text);
   }
 
@@ -30,7 +29,6 @@ export class UsersController {
 
   @Post('updateUser')
   public updateUser(@Request() req) {
-    console.log(req.headers.user)
     return this.userService.updateUser(req.headers.user,req.body);
   }
 

@@ -252,7 +252,6 @@ export default {
               let add = 1;
               for (let i = 0; i < this.conversations[0].length; i++) {
                 if (this.conversations[0][i][0].id == el.id) add = 0;
-                console.log(this.conversations[0][i][0].id, el.id);
               }
               if (el.id != this.userID && add == 1) this.searchResult.push(el);
             });

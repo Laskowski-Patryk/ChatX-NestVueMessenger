@@ -144,9 +144,10 @@ export default {
       if (this.nameCheck == "wrong") return;
       if (this.cityCheck == "wrong") return;
       if (this.checkboxCheck == "wrong") return;
-
+      
       let credentials = {};
       this.$recaptcha("login").then((token) => {
+      
         credentials.token = token;
         credentials.secret = "6LfmM_AUAAAAAPOwrNo4IP-Geiyf9Bom16tT3ySx";
         axios
@@ -170,6 +171,8 @@ export default {
                   )
                     this.errors.push("This email is already in use.");
                 });
+            }else{
+              this.errors.push("Captcha error");
             }
           });
       });
