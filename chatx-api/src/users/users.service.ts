@@ -32,11 +32,17 @@ export class UsersService {
           },
         },
       }),
-    ).pipe(
+    ).pipe(// @ts-ignore: Unreachable code error
       map((users: UserDto[]) => {
         let usrs = [];
         users.forEach(function (v) {
-          let usr = { name: v.name, surname: v.surname, city: v.city , id: v._id, avatar: v.avatar};
+          let usr = {
+            name: v.name,
+            surname: v.surname,
+            city: v.city,
+            id: v._id,
+            avatar: v.avatar,
+          };
           usrs.push(usr);
         });
 
@@ -63,7 +69,11 @@ export class UsersService {
         usr.password = passwordHash;
         usr.password_reset = false;
         usr.created_at = Date.now() + 2 * 60 * 60 * 1000;
+        usr.permission = 0;
+        usr.banned = false;
+        usr.deleted = false;
         const user = new this.userModel(usr);
+        console;
 
         return from(
           user.save().catch((err) => {
@@ -91,6 +101,14 @@ export class UsersService {
 
   public async getUserByUsername(username: string): Promise<any> {
     const user = await this.userModel.findOne({ username }).exec();
+    if (!user) {
+      throw new HttpException('Not Found', 404);
+    }
+    return user;
+  }
+
+  public async getAllUsers(): Promise<any> {
+    const user = await this.userModel.find().exec();
     if (!user) {
       throw new HttpException('Not Found', 404);
     }
@@ -139,13 +157,8 @@ export class UsersService {
     return x._doc;
   }
 
-  public async updateUser(
-    id: string,
-    user: UserDto,
-  ): Promise<UserDto> {
-    const usr = await this.userModel
-      .findOneAndUpdate({ _id: id }, user)
-      .exec();
+  public async updateUser(id: string, user: UserDto): Promise<UserDto> {
+    const usr = await this.userModel.findOneAndUpdate({ _id: id }, user).exec();
     if (!user) {
       throw new HttpException('Not Found', 404);
     }

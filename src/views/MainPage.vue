@@ -19,7 +19,8 @@
     </div>
     <div class="options fadein" id="options">
       <div class="option-logout" @click="logout">Logout</div>
-      <div class="option-profile" @click="profile">Your profile</div>
+      <div class="option-profile" @click="profile">Profile</div>
+      <div v-if="permission > 1" class="option-profile" @click="adminPanel">Admin</div>
     </div>
     <div class="main-conversations">
       <div v-for="err in errors" v-bind:key="err" class="errors">{{ err }}</div>
@@ -134,6 +135,7 @@ export default {
       search: 0,
       errors: [],
       userID: window.localStorage.getItem("userid"),
+      permission: window.localStorage.getItem("permission"),
       conversations: [],
       messages: [],
       message: "",
@@ -195,6 +197,9 @@ export default {
     },
     profile: function() {
       this.$router.push("/profile");
+    },
+    adminPanel: function() {
+      this.$router.push("/adminPanel");
     },
     buttonPress: function(el) {
       var timeout = null;
@@ -329,7 +334,7 @@ export default {
               }
             }
             res.data.forEach((element) => {
-              this.messages.unshift(element); // TODO save load to conversation
+              this.messages.unshift(element);
               this.conversations[0][index].push(element);
             });
           })

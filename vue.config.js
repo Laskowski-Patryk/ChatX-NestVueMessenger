@@ -4,4 +4,9 @@ module.exports = {
     hot: true,
     disableHostCheck: true,
   },
+  pluginOptions: {
+    webpackBundleAnalyzer: {
+      openAnalyzer: false
+    }
+  }
   }

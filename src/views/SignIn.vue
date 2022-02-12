@@ -78,6 +78,7 @@ export default {
           
           window.localStorage.setItem("user", JSON.stringify(user));
            window.localStorage.setItem("userid", response.data.id);
+           window.localStorage.setItem("permission", response.data.permission);
           this.$router.go();
         })
         .catch((error) => {

@@ -6,7 +6,8 @@ import PasswordReset from "@/views/PasswordReset.vue";
 import RecoverPassword from "@/views/RecoverPassword.vue";
 import PageNotFound from "@/views/PageNotFound.vue";
 import Profile from "@/views/Profile.vue";
-import axios from '../axios';
+import AdminPanel from "@/views/AdminPanel.vue";
+import axios from "../axios";
 
 const routes = [
   {
@@ -43,6 +44,16 @@ const routes = [
     component: Register,
   },
   {
+    path: "/adminPanel",
+    name: "AdminPanel",
+    component: AdminPanel,
+    beforeEnter: (to: any, from: any, next: any) => {
+      guard(to, from, next);
+      permissionLevel(to, from, next);
+
+    },
+  },
+  {
     path: "/passwordreset",
     name: "PasswordReset",
     beforeEnter: (to: any, from: any, next: any) => {
@@ -62,7 +73,7 @@ const routes = [
   {
     path: "/:pathMatch(.*)*",
     component: PageNotFound,
-    name: 'PageNotFound'
+    name: "PageNotFound",
   },
 ];
 
@@ -73,7 +84,6 @@ const guard = function(to: any, from: any, next: any) {
       next();
     })
     .catch((error) => {
-
       window.location.href = "/signin";
     });
 };
@@ -89,9 +99,18 @@ const notSignedIn = function(to: any, from: any, next: any) {
     });
 };
 
+const permissionLevel = function(to: any, from: any, next: any) {
+  const x = localStorage.getItem("permission") as any;
+  if (x < 2) {
+    window.location.href = "/";
+  } else {
+    next();
+  }
+};
+
 const router = createRouter({
   history: createWebHistory(),
-  
+
   routes,
 });
 

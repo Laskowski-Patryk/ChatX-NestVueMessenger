@@ -26,7 +26,10 @@ export const UserSchema = new mongoose.Schema(
     city: { type: String, required: true },
     avatar: String,
     created_at: {type: Date, default: Date.now()+(2*60*60*1000)},
-    password_reset: Boolean
+    password_reset: Boolean,
+    permission: Number,
+    banned: Boolean,
+    deleted: Boolean,
   },
   { versionKey: false }, // aby nie zwracał niepotrzebnych danych
 );

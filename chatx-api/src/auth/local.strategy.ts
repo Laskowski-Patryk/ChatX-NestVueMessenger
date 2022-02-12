@@ -13,7 +13,13 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateUser(username, password).catch(err=>{
       throw new HttpException('Wrong username or password',403);
     });
-    
+    // @ts-ignore: Unreachable code error
+    if(user && user._doc.deleted == true){
+      throw new HttpException('Your account has been deleted',403);
+    }// @ts-ignore: Unreachable code error
+    if(user && user._doc.banned == true){
+      throw new HttpException('Your account has been suspended',403);
+    }
     if (!user) {
       throw new HttpException('Wrong username or password',403);
     }// @ts-ignore: Unreachable code error

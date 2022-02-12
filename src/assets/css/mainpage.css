@@ -170,7 +170,8 @@
   box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #fff;
 }
 
-.logo-image ,.search-image{
+.logo-image,
+.search-image {
   width: 80%;
   height: 80%;
   margin-top: 12%;
@@ -181,14 +182,14 @@
   -o-user-drag: none;
   -webkit-user-drag: none;
 }
-.search-image{
-  margin-left:11%;
+.search-image {
+  margin-left: 11%;
 }
 .msg {
   margin-left: 1rem;
 }
-.search-toggle{
-  height:100%;
+.search-toggle {
+  height: 100%;
 }
 .main-conversations-holder {
   width: 100%;
@@ -227,7 +228,36 @@
   box-shadow: inset 0.625rem 0.625rem 1.25rem #bababa,
     inset -0.625rem -0.625rem 1.25rem #fff;
 }
+@media only screen and (max-width: 650px) {
 
+  .grid {
+    all: initial;
+  }
+  .content {
+    overflow:auto;
+    overflow-x:hidden;
+  }
+ .main-conversations-holder{
+   max-height: 30rem;
+ }
+ .search{
+   min-height:20rem;
+  max-height: 30rem;
+}
+
+  .chat-module {
+    margin-top:1rem;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    overflow: auto;
+    max-height: 40rem;
+    border-radius: 3.125rem;
+    background: #e0e0e0;
+    box-shadow: inset 0.625rem 0.625rem 1.25rem #bababa,
+      inset -0.625rem -0.625rem 1.25rem #fff;
+  }
+}
 .btn-options:active,
 .btn-send:active,
 .btn-logo:active,
