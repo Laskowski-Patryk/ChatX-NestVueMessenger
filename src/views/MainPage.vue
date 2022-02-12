@@ -122,7 +122,6 @@ import MessageBlob from "../components/MessageBlob.vue";
 import PersonBlob from "../components/PersonBlob.vue";
 import axios from "axios";
 import io from "socket.io-client";
-import moment from "moment";
 import $ from "jquery";
 export default {
   name: "App",
@@ -158,7 +157,26 @@ export default {
     date: function(date) {
       let time = Date.parse(date);
       time -= 2 * 60 * 60 * 1000;
-      return moment(time).format("DD-MM-YYYY HH:mm:ss");
+      
+    var dt = new Date(time);
+    let seconds = dt.getSeconds();
+    let minutes = dt.getMinutes();
+    let hours = dt.getHours();
+
+    let day = dt.getDate();
+    let month = dt.getMonth();
+    month+=1;
+
+    if(seconds < 10) seconds = '0' + seconds;
+    if(minutes < 10) minutes = '0' + minutes;
+    if(hours < 10) hours = '0' + hours;
+
+    if(day < 10) day = '0' + day;
+    if(month < 10) month = '0' + month;
+
+    let date1 = day+'-'+month+'-'+dt.getFullYear()+' '+hours+':'+minutes+':'+seconds;
+
+      return date1;
     },
     sendmessage: function(e) {
       e.preventDefault();

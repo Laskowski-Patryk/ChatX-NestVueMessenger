@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import moment from "moment";
 export default {
   props: ["name", "surname", "message", "seen", "date", "id", "sel","avatar"],
   data() {
@@ -40,7 +39,24 @@ export default {
     }
     let time = Date.parse(this.date);
     time -= 2 * 60 * 60 * 1000;
-    this.date1 = moment(time).format("DD-MM-YYYY HH:mm");
+    
+    var date = new Date(time);
+    let seconds = date.getSeconds();
+    let minutes = date.getMinutes();
+    let hours = date.getHours();
+
+    let day = date.getDate();
+    let month = date.getMonth();
+    month+=1;
+
+    if(seconds < 10) seconds = '0' + seconds;
+    if(minutes < 10) minutes = '0' + minutes;
+    if(hours < 10) hours = '0' + hours;
+
+    if(day < 10) day = '0' + day;
+    if(month < 10) month = '0' + month;
+
+    this.date1 = day+'-'+month+'-'+date.getFullYear()+' '+hours+':'+minutes+':'+seconds;
   },
   watch: {
     seen: function() {
