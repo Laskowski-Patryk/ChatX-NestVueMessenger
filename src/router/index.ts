@@ -1,14 +1,13 @@
 import { createWebHistory, createRouter } from "vue-router";
-import SignIn from "@/views/SignIn.vue";
-import Register from "@/views/Register.vue";
-import MainPage from "@/views/MainPage.vue";
-import PasswordReset from "@/views/PasswordReset.vue";
-import RecoverPassword from "@/views/RecoverPassword.vue";
-import PageNotFound from "@/views/PageNotFound.vue";
-import Profile from "@/views/Profile.vue";
-import AdminPanel from "@/views/AdminPanel.vue";
 import axios from "../axios";
-
+const Register = () => import("@/views/Register.vue")
+const MainPage = () => import("@/views/MainPage.vue")
+const SignIn = () => import("@/views/SignIn.vue")
+const PasswordReset = () => import("@/views/PasswordReset.vue")
+const RecoverPassword = () => import("@/views/RecoverPassword.vue")
+const PageNotFound = () => import("@/views/PageNotFound.vue")
+const Profile = () => import("@/views/Profile.vue")
+const AdminPanel = () => import("@/views/AdminPanel.vue")
 const routes = [
   {
     path: "/",
