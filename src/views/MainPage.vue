@@ -122,7 +122,6 @@ import MessageBlob from "../components/MessageBlob.vue";
 import PersonBlob from "../components/PersonBlob.vue";
 import axios from "axios";
 import io from "socket.io-client";
-import $ from "jquery";
 export default {
   name: "App",
   components: {
@@ -222,11 +221,12 @@ export default {
     buttonPress: function(el) {
       var timeout = null;
 
-      $("#searchBar").keyup(function() {
-        clearTimeout(timeout);
+document.getElementById('searchBar').onkeyup = function (e) {
+    clearTimeout(timeout);
 
         timeout = setTimeout(function() {}, 500);
-      });
+};
+
     },
     changeConv: function(id) {
       this.conversationID = id;
