@@ -67,6 +67,7 @@ export default {
       if (this.user.username == "") this.errors.push("Provide your username");
       if (this.user.password == "") this.errors.push("Provide your password");
       if (this.errors.length > 0) return;
+      
       axios
         .post("/login", this.user)
         .then((response) => {
