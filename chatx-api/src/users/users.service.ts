@@ -5,6 +5,7 @@ import { UserDto } from '../dtos/user.dto';
 import { from, Observable, throwError } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { MailerService } from '../mailer/mailer.service';
+import User from '../schemas/user.schema';
 var jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
@@ -13,7 +14,6 @@ const bcrypt = require('bcrypt');
 export class UsersService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<UserDto>,
-
     @Inject(forwardRef(() => MailerService))
     private readonly mailerService: MailerService,
   ) {}
@@ -45,7 +45,6 @@ export class UsersService {
           };
           usrs.push(usr);
         });
-
         return usrs;
       }),
     );
@@ -73,7 +72,6 @@ export class UsersService {
         usr.banned = false;
         usr.deleted = false;
         const user = new this.userModel(usr);
-        console;
 
         return from(
           user.save().catch((err) => {
@@ -182,3 +180,7 @@ function randomHash(length, current) {
       )
     : current;
 }
+function InjectRepository(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+

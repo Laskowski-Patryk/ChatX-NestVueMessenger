@@ -1,18 +1,38 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { UsersService } from './users.service';
+import { User } from '../schemas/user.schema';
 
-describe('UsersController', () => {
-  let controller: UsersController;
+describe('AppController', () => {
+  let userService: UsersService;
+  const reqMock = {
+    query: {},
+  } as unknown as Request;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [UsersController],
-    }).compile();
+    let userService: UsersService;
 
-    controller = module.get<UsersController>(UsersController);
+    const module = await Test.createTestingModule({
+      providers: [
+        UsersService,
+        {
+          provide: getRepositoryToken(User),
+          useValue: {},
+        },
+      ],
+    }).compile();
+    userService = await module.get<UsersService>(UsersService);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  describe('Testing user services', () => {
+    it('testing get user by username', () => {
+      expect(typeof userService.getUserByUsername('lasek')).not.toEqual(null);
+    });
+
+    it('Testing get all users', () => {
+      expect(typeof userService.getAllUsers()).not.toBeNull();
+    });
+
   });
 });
