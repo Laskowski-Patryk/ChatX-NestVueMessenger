@@ -15,8 +15,9 @@ import { ConversationService } from './conversation.service';
 export class ConversationController {
   constructor(private conversationService: ConversationService) {}
 
-  @Get('getAll')
+  @Get('getAll') 
   public getAllConversations(@Request() req) {
+    
     return this.conversationService.getAllConversations(req.user.id, 7, 0);
   }
 }

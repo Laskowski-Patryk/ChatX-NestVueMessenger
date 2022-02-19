@@ -18,6 +18,7 @@
         </div>
         <div class="form-group">
           <label>Password</label>
+          <br id="brbr">
           <span class="right"
             ><a href="http://localhost:8080/passwordreset" tabindex="1"
               >Forgot password?</a
@@ -40,12 +41,12 @@
           {{ error }}
         </div>
 
-        <button id="but" type ="submit" @click="signIn">Sign In</button>
+        <button id="but" type="submit" @click="signIn">Sign In</button>
       </form>
     </div>
   </div>
 </template>
-<script >
+<script>
 import axios from "axios";
 export default {
   name: "SignIn",
@@ -61,33 +62,52 @@ export default {
     };
   },
   methods: {
-    signIn: function (e) {
+    signIn: function(e) {
       e.preventDefault();
       this.errors = [];
       if (this.user.username == "") this.errors.push("Provide your username");
       if (this.user.password == "") this.errors.push("Provide your password");
       if (this.errors.length > 0) return;
-      
-      axios
-        .post("/login", this.user)
-        .then((response) => {
-          const user = {
-            token: response.data.access_token,
-            id: response.data.id,
-            nickname: this.user.username,
-          };
-          
-          window.localStorage.setItem("user", JSON.stringify(user));
-           window.localStorage.setItem("userid", response.data.id);
-           window.localStorage.setItem("permission", response.data.permission);
-          this.$router.go();
-        })
-        .catch((error) => {
-          this.success = [];
-          this.errors = [];
-          if (error.response.data.message)
-            this.errors.push(error.response.data.message);
-        });
+      let credentials = {};
+      this.$recaptcha("login").then((token) => {
+        credentials.token = token;
+        credentials.secret = "6LfmM_AUAAAAAPOwrNo4IP-Geiyf9Bom16tT3ySx";
+        axios
+          .post("http://localhost:3000/captcha", credentials)
+          .then((response) => {
+            console.log(response)
+            if (response.data.success == true) {
+              axios
+                .post("/login", this.user)
+                .then((response) => {
+                  const user = {
+                    token: response.data.access_token,
+                    id: response.data.id,
+                    nickname: this.user.username,
+                  };
+
+                  window.localStorage.setItem("user", JSON.stringify(user));
+                  window.localStorage.setItem("userid", response.data.id);
+                  window.localStorage.setItem(
+                    "permission",
+                    response.data.permission
+                  );
+                  this.$router.go();
+                })
+                .catch((error) => {
+                  this.success = [];
+                  this.errors = [];
+                  if (error.response.data.message)
+                    this.errors.push(error.response.data.message);
+                });
+            }
+          })
+          .catch((error) => {
+            this.errors = [];
+            if (error.response.data.message)
+              this.errors.push("Wrong captcha, try again later");
+          });
+      });
     },
   },
   mounted() {
@@ -122,7 +142,7 @@ export default {
   padding: 4.75%;
   overflow: auto;
   padding-top: 2rem !important;
-  height:auto;
+  height: auto;
 }
 @media screen and (min-width: 1281px) {
   .center-form {
@@ -198,5 +218,15 @@ h3 {
 .success {
   font-weight: 700;
   color: green;
+}
+@media only screen and (min-width: 650px) {
+  #brbr{
+    display:none;
+  }
+}
+@media only screen and (max-width: 650px) {
+  .right{
+    float: left;
+  }
 }
 </style>

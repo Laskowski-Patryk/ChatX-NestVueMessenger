@@ -230,6 +230,24 @@
 }
 @media only screen and (max-width: 650px) {
 
+  .st {
+    font-size: 1.1rem;
+    text-align: left;
+    max-width: 80%;
+    border-radius: 1vw;
+    position: relative;
+    padding: 0.7rem;
+    margin-top: 1rem;
+    box-shadow: 6px 6px 16px #bebebe, -6px -6px 16px #fff;
+    display: inline-block;
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+
+  .over::-webkit-scrollbar{
+      display: none;
+    
+  }
   .grid {
     all: initial;
   }
@@ -237,6 +255,7 @@
     overflow:auto;
     overflow-x:hidden;
   }
+  
  .main-conversations-holder{
    max-height: 30rem;
  }

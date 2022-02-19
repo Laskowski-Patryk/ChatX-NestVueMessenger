@@ -4,7 +4,6 @@
       <h1>Provide new password for your account</h1>
       <br />
       <br />
-      <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
           <input

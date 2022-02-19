@@ -4,7 +4,6 @@
       <h1>Register</h1>
       <h3>&nbsp;or <router-link to="/signin">Sign in</router-link></h3>
       <br /><br />
-      <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
           <label for="exampleInputEmail1">Email address</label>
@@ -249,7 +248,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style >
 .wrong:focus {
   /* outline: none !important; */
   border: 1px solid red;
@@ -344,5 +343,17 @@ h3 {
 .errors {
   font-weight: 700;
   color: red;
+}
+
+@media only screen and (max-width: 650px) {
+  .personal{
+    all:initial;
+  }
+  #surname-input{
+    margin-top:0.5rem;
+  }
+  .content{
+    overflow:auto;
+  }
 }
 </style>

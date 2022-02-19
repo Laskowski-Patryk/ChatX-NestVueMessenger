@@ -3,7 +3,6 @@
     <div class="center-form">
       <h1>Your Credentials</h1>
       <br /><br />
-      <!-- SCROLLBAR TODO -->
       <form>
         <div class="form-group">
           <label>Change avatar</label>
@@ -191,10 +190,7 @@ export default {
   box-shadow: 0 0 10px green;
 }
 
-.personal {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-}
+
 .center-form {
   /* max-height: 92%; */
   border-radius: 2vh;
@@ -277,5 +273,12 @@ h3 {
 .success {
   font-weight: 700;
   color: green;
+}
+@media only screen and (max-width: 650px) {
+  
+.center-form{
+  grid-column: 1/35;
+    overflow-x:hidden;
+  }
 }
 </style>
