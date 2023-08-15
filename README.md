@@ -1,6 +1,6 @@
-# ChatX - Real-Time Messenger App
+# ChatX - Real-Time Messenger App (Bachelor's Thesis Project)
 
-ChatX is a real-time messenger application developed using Nest.js, Vue.js, websockets, and TypeScript. The project encompasses a full-stack application architecture, integrating real-time communication features and user authentication.
+ChatX is a real-time messenger application developed using Nest.js, Vue.js, websockets, and TypeScript. This project represents a full-stack application architecture, incorporating real-time communication features and user authentication.
 
 
 ## Features
@@ -49,3 +49,9 @@ ChatX is a real-time messenger application developed using Nest.js, Vue.js, webs
 2. Log in with your credentials.
 3. Start a new conversation or join an existing one.
 4. Send and receive real-time messages in the messenger interface.
+
+## Contributing
+
+Contributions are welcome! If you encounter a bug or wish to implement new features, feel free to fork the repository and submit a pull request.
+
+
